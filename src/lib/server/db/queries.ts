@@ -2,9 +2,9 @@ import { getConnection } from './connection';
 import { initializeDatabase } from './setup';
 
 export interface QueryResult<T = Record<string, unknown>> {
-	rows: T[];
-	rowCount: number;
-	columnNames: string[];
+    rows: T[];
+    rowCount: number;
+    columnNames: string[];
 }
 
 /**
@@ -12,24 +12,24 @@ export interface QueryResult<T = Record<string, unknown>> {
  * Ensures database is initialized before querying.
  */
 export async function query<T = Record<string, unknown>>(sql: string): Promise<QueryResult<T>> {
-	await initializeDatabase();
+    await initializeDatabase();
 
-	const connection = await getConnection();
+    const connection = await getConnection();
 
-	try {
-		const reader = await connection.runAndReadAll(sql);
-		// Use getRowObjectsJson() to ensure BigInt values are converted to JSON-safe types
-		const rows = reader.getRowObjectsJson() as T[];
-		const columnNames = reader.columnNames();
+    try {
+        const reader = await connection.runAndReadAll(sql);
+        // Use getRowObjectsJson() to ensure BigInt values are converted to JSON-safe types
+        const rows = reader.getRowObjectsJson() as T[];
+        const columnNames = reader.columnNames();
 
-		return {
-			rows,
-			rowCount: rows.length,
-			columnNames
-		};
-	} finally {
-		connection.closeSync();
-	}
+        return {
+            rows,
+            rowCount: rows.length,
+            columnNames
+        };
+    } finally {
+        connection.closeSync();
+    }
 }
 
 /**
@@ -37,34 +37,34 @@ export async function query<T = Record<string, unknown>>(sql: string): Promise<Q
  * Useful for large result sets.
  */
 export async function* queryStream<T = Record<string, unknown>>(
-	sql: string
+    sql: string
 ): AsyncGenerator<T[], void, unknown> {
-	await initializeDatabase();
+    await initializeDatabase();
 
-	const connection = await getConnection();
+    const connection = await getConnection();
 
-	try {
-		const result = await connection.stream(sql);
+    try {
+        const result = await connection.stream(sql);
 
-		for await (const chunk of result.yieldRowObjectJson()) {
-			yield chunk as T[];
-		}
-	} finally {
-		connection.closeSync();
-	}
+        for await (const chunk of result.yieldRowObjectJson()) {
+            yield chunk as T[];
+        }
+    } finally {
+        connection.closeSync();
+    }
 }
 
 /**
  * Execute a query that doesn't return results (DDL, etc.).
  */
 export async function execute(sql: string): Promise<void> {
-	await initializeDatabase();
+    await initializeDatabase();
 
-	const connection = await getConnection();
+    const connection = await getConnection();
 
-	try {
-		await connection.run(sql);
-	} finally {
-		connection.closeSync();
-	}
+    try {
+        await connection.run(sql);
+    } finally {
+        connection.closeSync();
+    }
 }

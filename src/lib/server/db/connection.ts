@@ -8,10 +8,10 @@ let isInitialized = false;
  * Uses in-memory database since we're only querying remote parquet files.
  */
 export async function getInstance(): Promise<DuckDBInstance> {
-	if (!instance) {
-		instance = await DuckDBInstance.create(':memory:');
-	}
-	return instance;
+    if (!instance) {
+        instance = await DuckDBInstance.create(':memory:');
+    }
+    return instance;
 }
 
 /**
@@ -19,30 +19,30 @@ export async function getInstance(): Promise<DuckDBInstance> {
  * Each request should get its own connection for isolation.
  */
 export async function getConnection(): Promise<DuckDBConnection> {
-	const inst = await getInstance();
-	return inst.connect();
+    const inst = await getInstance();
+    return inst.connect();
 }
 
 /**
  * Check if the database has been initialized with extensions and views.
  */
 export function isDatabaseInitialized(): boolean {
-	return isInitialized;
+    return isInitialized;
 }
 
 /**
  * Mark the database as initialized.
  */
 export function markInitialized(): void {
-	isInitialized = true;
+    isInitialized = true;
 }
 
 /**
  * Cleanup function for graceful shutdown.
  */
 export async function closeInstance(): Promise<void> {
-	if (instance) {
-		instance = null;
-		isInitialized = false;
-	}
+    if (instance) {
+        instance = null;
+        isInitialized = false;
+    }
 }

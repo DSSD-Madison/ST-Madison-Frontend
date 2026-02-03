@@ -10,13 +10,13 @@ export type { QueryResult } from './queries';
 
 // Types
 export type {
-	Site,
-	TaxRoll,
-	AlderDistrict,
-	AreaPlan,
-	Parcel,
-	Street,
-	NeighborhoodAverage,
-	AlderDistrictAverage,
-	PropertyClassAverage
+    Site,
+    TaxRoll,
+    AlderDistrict,
+    AreaPlan,
+    Parcel,
+    Street,
+    NeighborhoodAverage,
+    AlderDistrictAverage,
+    PropertyClassAverage
 } from './types';
