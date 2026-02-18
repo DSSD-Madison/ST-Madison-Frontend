@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import MetricSelector from '../components/MetricSelector.svelte';
+</script>
+
+
+<div class="relative h-screen w-full bg-gray-950">
+  <!-- Map will be rendered here -->
+  <MetricSelector />
+</div>
