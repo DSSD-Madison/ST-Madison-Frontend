@@ -1,0 +1,12 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "st-madison-frontend",
+	"compatibility_date": "2025-11-06",
+	"assets": {
+		"directory": ".svelte-kit/cloudflare"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"preview_urls": true
+}
