@@ -2,6 +2,10 @@
     import { onMount, onDestroy} from 'svelte';
     import maplibregl, {Map} from 'maplibre-gl';
     import 'maplibre-gl/dist/maplibre-gl.css';
+    export let center: [number, number] = [-89.3844, 43.0747];
+    export let zoom: number = 12;
+    export let styleUrl: string = 'https://demotiles.maplibre.org/style.json';
+
 
     let mapContainer: HTMLElement;
     let map: Map;
@@ -9,10 +13,10 @@
         map = new maplibregl.Map({
             container: mapContainer,
             //default style
-            style: 'https://demotiles.maplibre.org/style.json',
+            style: styleUrl,
             //Madison coordinates
-            center: [-89.3844, 43.0747],
-            zoom: 12
+            center,
+            zoom
         });
         //Zoom controls
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -29,6 +33,6 @@
 <style>
     .map-container {
         width: 100%;
-        height: 100%;
+        height: 100vh;
     }
 </style>
