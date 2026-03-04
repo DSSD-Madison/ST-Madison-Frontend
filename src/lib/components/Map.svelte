@@ -8,30 +8,14 @@
     export let zoom: number = 12;
 
     let mapContainer: HTMLDivElement;
-    let map: Map | null = null;
-    //Get mapbox token from .env
-    const mapboxToken = import.meta.env.MAPBOX_API_KEY;
+    let map: Map | null = null;    
 
     onMount(() => {
         map = new maplibregl.Map({
             container: mapContainer,
             center,
             zoom,
-            style: 'mapbox://styles/mapbox/light-v11',
-
-            transformRequest: (url, resourceType) => {
-                if (resourceType === 'Style' || resourceType === 'Source' || resourceType === 'Tile') {
-                    // Check if the URL is a mapbox URL
-                    if (url.startsWith('mapbox://')) {
-                        const mapboxUrl = new URL(url.replace('mapbox://', 'https://api.mapbox.com/'));
-                        mapboxUrl.searchParams.set('access_token', mapboxToken);
-                        return {
-                            url: mapboxUrl.toString()
-                        };
-                    }
-                }
-                return { url }; // Return the original URL for non-mapbox requests
-            }
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
