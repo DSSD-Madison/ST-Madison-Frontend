@@ -8,36 +8,14 @@
     export let zoom: number = 12;
 
     let mapContainer: HTMLDivElement;
-    let map: Map | null = null;
+    let map: Map | null = null;    
 
     onMount(() => {
         map = new maplibregl.Map({
             container: mapContainer,
             center,
             zoom,
-            style: {
-                version: 8,
-                sources: {
-                    osm: {
-                        type: 'raster',
-                        tiles: [
-                            'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                        ],
-                        tileSize: 256,
-                        attribution:
-                            '&copy; OpenStreetMap Contributors'
-                    }
-                },
-                layers: [
-                    {
-                        id: 'osm',
-                        type: 'raster',
-                        source: 'osm'
-                    }
-                ]
-            } as any // avoids strict TS style type errors
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
