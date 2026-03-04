@@ -9,35 +9,32 @@
 
     let mapContainer: HTMLDivElement;
     let map: Map | null = null;
+    const mapboxToken = import.meta.env.MAPBOX_API_KEY;
 
     onMount(() => {
         map = new maplibregl.Map({
             container: mapContainer,
             center,
             zoom,
-            style: {
-                version: 8,
-                sources: {
-                    osm: {
-                        type: 'raster',
-                        tiles: [
-                            'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                        ],
-                        tileSize: 256,
-                        attribution:
-                            '&copy; OpenStreetMap Contributors'
+            // We replace the entire style object with this single line
+            style: 'mapbox://styles/mapbox/light-v11',
+
+            // 3. This is the magic part that adds your token to every request
+            transformRequest: (url, resourceType) => {
+                if (resourceType === 'Style' || resourceType === 'Source' || resourceType === 'Tile') {
+                    // Check if the URL is a mapbox URL
+                    if (url.startsWith('mapbox://')) {
+                        // Transform the mapbox:// URL to a real https:// URL
+                        // and add the access token.
+                        const mapboxUrl = new URL(url.replace('mapbox://', 'https://api.mapbox.com/'));
+                        mapboxUrl.searchParams.set('access_token', mapboxToken);
+                        return {
+                            url: mapboxUrl.toString()
+                        };
                     }
-                },
-                layers: [
-                    {
-                        id: 'osm',
-                        type: 'raster',
-                        source: 'osm'
-                    }
-                ]
-            } as any // avoids strict TS style type errors
+                }
+                return { url }; // Return the original URL for non-mapbox requests
+            }
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
