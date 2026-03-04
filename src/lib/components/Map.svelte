@@ -9,6 +9,7 @@
 
     let mapContainer: HTMLDivElement;
     let map: Map | null = null;
+    //Get mapbox token from .env
     const mapboxToken = import.meta.env.MAPBOX_API_KEY;
 
     onMount(() => {
@@ -16,16 +17,12 @@
             container: mapContainer,
             center,
             zoom,
-            // We replace the entire style object with this single line
             style: 'mapbox://styles/mapbox/light-v11',
 
-            // 3. This is the magic part that adds your token to every request
             transformRequest: (url, resourceType) => {
                 if (resourceType === 'Style' || resourceType === 'Source' || resourceType === 'Tile') {
                     // Check if the URL is a mapbox URL
                     if (url.startsWith('mapbox://')) {
-                        // Transform the mapbox:// URL to a real https:// URL
-                        // and add the access token.
                         const mapboxUrl = new URL(url.replace('mapbox://', 'https://api.mapbox.com/'));
                         mapboxUrl.searchParams.set('access_token', mapboxToken);
                         return {
