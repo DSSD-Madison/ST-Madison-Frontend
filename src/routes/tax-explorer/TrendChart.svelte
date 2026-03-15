@@ -9,7 +9,10 @@
 
     function buildPath(points: number[]): string {
         if (points.length < 2) return '';
-        const xMin = 10, xMax = 190, yMin = 10, yMax = 90;
+        const xMin = 10,
+            xMax = 190,
+            yMin = 10,
+            yMax = 90;
         const min = Math.min(...points);
         const max = Math.max(...points);
         const ySpan = max - min || 1;

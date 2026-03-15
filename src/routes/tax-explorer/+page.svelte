@@ -2,6 +2,7 @@
     import AssessmentsTable from './AssessmentsTable.svelte';
     import LandEfficiencyTable from './LandEfficiencyTable.svelte';
     import BreakdownBarChart from './BreakdownBarChart.svelte';
+    import BreakdownYearChart from './BreakdownYearChart.svelte';
     import PropertySearch from './PropertySearch.svelte';
     import PropertyDetailsDropdown from './PropertyDetailsDropdown.svelte';
     import TrendChart from './TrendChart.svelte';
@@ -27,6 +28,7 @@
     let landEfficiency = $state(landEfficiencyMock);
     let trends = $state(trendsMock);
     let taxBreakdown = $state(taxBreakdownMock.sources);
+    let taxBreakdownYears = $state(taxBreakdownMock.years);
 
     async function handleSearch(address: string) {
         // TODO: fetch parcel data from backend API using address
@@ -64,9 +66,17 @@
         <div class="section">
             <h2>Trends</h2>
             <div class="trends-row">
-                <TrendChart label="Effective Tax Rate" color="#4a9e4a" data={trends?.effectiveTaxRate ?? null} />
+                <TrendChart
+                    label="Effective Tax Rate"
+                    color="#4a9e4a"
+                    data={trends?.effectiveTaxRate ?? null}
+                />
                 <TrendChart label="Net Taxes" color="#c84b4b" data={trends?.netTaxes ?? null} />
-                <TrendChart label="Assessed Value" color="#4a72c8" data={trends?.assessedValue ?? null} />
+                <TrendChart
+                    label="Assessed Value"
+                    color="#4a72c8"
+                    data={trends?.assessedValue ?? null}
+                />
             </div>
         </div>
 
@@ -91,11 +101,23 @@
                     </button>
                 </div>
             </div>
-            <div class="bar-charts-row">
-                {#each taxBreakdown as group}
-                    <BreakdownBarChart label={group.label} bars={group.values} color={barColors[group.label]} />
-                {/each}
-            </div>
+            {#if groupMode === 'group'}
+                <div class="bar-charts-row">
+                    {#each taxBreakdown as group (group.label)}
+                        <BreakdownBarChart
+                            label={group.label}
+                            bars={group.values}
+                            color={barColors[group.label]}
+                        />
+                    {/each}
+                </div>
+            {:else}
+                <BreakdownYearChart
+                    years={taxBreakdownYears}
+                    sources={taxBreakdown}
+                    colors={barColors}
+                />
+            {/if}
         </div>
     </div>
 </div>
@@ -208,7 +230,7 @@
 
     .toggle-btn.active {
         border-color: #555;
-        background: #f0f0f0;
+        background: #fff;
         color: #222;
     }
 
@@ -217,14 +239,11 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
+        background: #ccc;
     }
 
-    .dot.blue {
+    .toggle-btn.active .dot {
         background: #5b9bd5;
-    }
-
-    .dot.gray {
-        background: #888;
     }
 
     .trends-row {
