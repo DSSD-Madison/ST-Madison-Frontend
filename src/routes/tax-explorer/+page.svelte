@@ -3,12 +3,14 @@
     import LandEfficiencyTable from './LandEfficiencyTable.svelte';
     import BreakdownBarChart from './BreakdownBarChart.svelte';
     import PropertySearch from './PropertySearch.svelte';
+    import PropertyDetailsDropdown from './PropertyDetailsDropdown.svelte';
     import TrendChart from './TrendChart.svelte';
 
     import assessmentsMock from '$lib/mock/parcel-assessments.json';
     import landEfficiencyMock from '$lib/mock/parcel-land-efficiency.json';
     import trendsMock from '$lib/mock/parcel-trends.json';
     import taxBreakdownMock from '$lib/mock/parcel-tax-breakdown.json';
+    import propertyDetailsMock from '$lib/mock/parcel-property-details.json';
 
     const barColors: Record<string, string> = {
         City: '#5b9bd5',
@@ -18,8 +20,10 @@
     };
 
     let groupMode = $state<'group' | 'year'>('group');
+    let dropdownOpen = $state(false);
 
     let assessments = $state(assessmentsMock);
+    let propertyDetails = $state(propertyDetailsMock);
     let landEfficiency = $state(landEfficiencyMock);
     let trends = $state(trendsMock);
     let taxBreakdown = $state(taxBreakdownMock.sources);
@@ -38,7 +42,18 @@
     <div class="card">
         <h1>Parcel Explorer</h1>
 
-        <PropertySearch onsearch={handleSearch} />
+        <div class="search-section">
+            <label for="address">Find a Property</label>
+            <div class="search-row">
+                <PropertySearch onsearch={handleSearch} />
+                <div class="dropdown-anchor">
+                    <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
+                        Property Details <span class="caret">&#8964;</span>
+                    </button>
+                    <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
+                </div>
+            </div>
+        </div>
 
         <div class="tables-row">
             <AssessmentsTable data={assessments} />
@@ -108,6 +123,45 @@
         font-size: 1.25rem;
         font-weight: 700;
         margin: 0 0 0.75rem;
+    }
+
+    .search-section {
+        margin-bottom: 1.75rem;
+    }
+
+    .search-section label {
+        display: block;
+        font-size: 0.85rem;
+        color: #555;
+        margin-bottom: 0.4rem;
+    }
+
+    .search-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .dropdown-anchor {
+        position: relative;
+    }
+
+    .dropdown-btn {
+        padding: 0.45rem 0.75rem;
+        border: 1.5px solid #333;
+        border-radius: 6px;
+        background: #fff;
+        font-family: inherit;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .caret {
+        font-size: 1rem;
+        line-height: 1;
     }
 
     .tables-row {
