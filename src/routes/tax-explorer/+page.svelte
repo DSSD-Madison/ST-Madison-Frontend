@@ -49,7 +49,7 @@
             <PropertySearch onsearch={handleSearch} />
             <div class="dropdown-anchor">
                 <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
-                    Property Details <span class="caret">&#8964;</span>
+                    Property Details <span class="caret">v</span>
                 </button>
                 <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
             </div>

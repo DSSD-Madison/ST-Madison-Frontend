@@ -33,6 +33,6 @@
     }
 
     input[type='text']:focus {
-        border-color: #666;
+        border-color: cornflowerblue;
     }
 </style>
