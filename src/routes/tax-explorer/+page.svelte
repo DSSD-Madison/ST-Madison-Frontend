@@ -41,98 +41,88 @@
 </script>
 
 <div class="page">
-    <div class="card">
-        <h1>Parcel Explorer</h1>
+    <h1>Parcel Explorer</h1>
 
-        <div class="search-section">
-            <label for="address">Find a Property</label>
-            <div class="search-row">
-                <PropertySearch onsearch={handleSearch} />
-                <div class="dropdown-anchor">
-                    <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
-                        Property Details <span class="caret">&#8964;</span>
-                    </button>
-                    <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
-                </div>
+    <div class="search-section">
+        <label for="address">Find a Property</label>
+        <div class="search-row">
+            <PropertySearch onsearch={handleSearch} />
+            <div class="dropdown-anchor">
+                <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
+                    Property Details <span class="caret">&#8964;</span>
+                </button>
+                <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
             </div>
         </div>
+    </div>
 
-        <div class="tables-row">
-            <AssessmentsTable data={assessments} />
-            <LandEfficiencyTable data={landEfficiency} />
+    <div class="tables-row">
+        <AssessmentsTable data={assessments} />
+        <LandEfficiencyTable data={landEfficiency} />
+    </div>
+
+    <!-- Trends -->
+    <div class="section">
+        <h2>Trends</h2>
+        <div class="trends-row">
+            <TrendChart
+                label="Effective Tax Rate"
+                color="#4a9e4a"
+                data={trends?.effectiveTaxRate ?? null}
+            />
+            <TrendChart label="Net Taxes" color="#c84b4b" data={trends?.netTaxes ?? null} />
+            <TrendChart
+                label="Assessed Value"
+                color="#4a72c8"
+                data={trends?.assessedValue ?? null}
+            />
         </div>
+    </div>
 
-        <!-- Trends -->
-        <div class="section">
-            <h2>Trends</h2>
-            <div class="trends-row">
-                <TrendChart
-                    label="Effective Tax Rate"
-                    color="#4a9e4a"
-                    data={trends?.effectiveTaxRate ?? null}
-                />
-                <TrendChart label="Net Taxes" color="#c84b4b" data={trends?.netTaxes ?? null} />
-                <TrendChart
-                    label="Assessed Value"
-                    color="#4a72c8"
-                    data={trends?.assessedValue ?? null}
-                />
+    <!-- Breakdown by Group -->
+    <div class="section">
+        <div class="breakdown-header">
+            <h2>Breakdown by Group</h2>
+            <div class="toggle-group">
+                <button
+                    class="toggle-btn"
+                    class:active={groupMode === 'group'}
+                    onclick={() => (groupMode = 'group')}
+                >
+                    <span class="dot blue"></span> By Group
+                </button>
+                <button
+                    class="toggle-btn"
+                    class:active={groupMode === 'year'}
+                    onclick={() => (groupMode = 'year')}
+                >
+                    <span class="dot gray"></span> By Year
+                </button>
             </div>
         </div>
-
-        <!-- Breakdown by Group -->
-        <div class="section">
-            <div class="breakdown-header">
-                <h2>Breakdown by Group</h2>
-                <div class="toggle-group">
-                    <button
-                        class="toggle-btn"
-                        class:active={groupMode === 'group'}
-                        onclick={() => (groupMode = 'group')}
-                    >
-                        <span class="dot blue"></span> By Group
-                    </button>
-                    <button
-                        class="toggle-btn"
-                        class:active={groupMode === 'year'}
-                        onclick={() => (groupMode = 'year')}
-                    >
-                        <span class="dot gray"></span> By Year
-                    </button>
-                </div>
+        {#if groupMode === 'group'}
+            <div class="bar-charts-row">
+                {#each taxBreakdown as group (group.label)}
+                    <BreakdownBarChart
+                        label={group.label}
+                        bars={group.values}
+                        color={barColors[group.label]}
+                    />
+                {/each}
             </div>
-            {#if groupMode === 'group'}
-                <div class="bar-charts-row">
-                    {#each taxBreakdown as group (group.label)}
-                        <BreakdownBarChart
-                            label={group.label}
-                            bars={group.values}
-                            color={barColors[group.label]}
-                        />
-                    {/each}
-                </div>
-            {:else}
-                <BreakdownYearChart
-                    years={taxBreakdownYears}
-                    sources={taxBreakdown}
-                    colors={barColors}
-                />
-            {/if}
-        </div>
+        {:else}
+            <BreakdownYearChart
+                years={taxBreakdownYears}
+                sources={taxBreakdown}
+                colors={barColors}
+            />
+        {/if}
     </div>
 </div>
 
 <style>
     .page {
         padding: 2rem;
-    }
-
-    .card {
-        border: 1.5px solid #333;
-        border-radius: 12px;
-        padding: 2rem;
-        max-width: 900px;
-        margin: 0 auto;
     }
 
     h1 {
