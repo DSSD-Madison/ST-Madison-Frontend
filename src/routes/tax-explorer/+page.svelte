@@ -1,4 +1,6 @@
 <script lang="ts">
+    import ExpandDown from '~icons/lets-icons/expand-down';
+
     import AssessmentsTable from './AssessmentsTable.svelte';
     import LandEfficiencyTable from './LandEfficiencyTable.svelte';
     import BreakdownBarChart from './BreakdownBarChart.svelte';
@@ -49,7 +51,9 @@
             <PropertySearch onsearch={handleSearch} />
             <div class="dropdown-anchor">
                 <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
-                    Property Details <span class="caret">v</span>
+                    Property Details <ExpandDown
+                        class="property-details-icon {dropdownOpen ? 'rotated' : ''}"
+                    />
                 </button>
                 <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
             </div>
@@ -171,9 +175,12 @@
         gap: 0.4rem;
     }
 
-    .caret {
-        font-size: 1rem;
-        line-height: 1;
+    .dropdown-btn :global(svg) {
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown-btn :global(.rotated) {
+        transform: rotate(180deg);
     }
 
     .tables-row {
