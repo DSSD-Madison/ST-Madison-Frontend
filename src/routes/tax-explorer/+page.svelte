@@ -41,7 +41,7 @@
 </script>
 
 <div class="page">
-    <h1>Parcel Explorer</h1>
+    <h1>Tax Explorer</h1>
 
     <div class="search-section">
         <label for="address">Find a Property</label>
