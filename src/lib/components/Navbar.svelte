@@ -17,8 +17,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background-color: #f5f5f5;
-    border-bottom: #ccc solid 1px;
+    background-color: var(--color-lower-nav);
   }
 
   .spacer {
@@ -32,7 +31,7 @@
 
   .navbar a {
     text-decoration: none;
-    color: #333;
+    color: var(--color-lower-nav);
   }
 
   .nav-link {
@@ -41,7 +40,7 @@
     gap: 0.5rem;
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
-    background-color: #ececec;
+    background-color: var(--color-link);
     transition: background-color 0.2s ease;
     &:hover {
       background-color: #dcdcdc;

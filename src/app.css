@@ -1,0 +1,20 @@
+:root {
+    --color-yellow: rgb(255, 181, 73);
+    --color-text: rgb(249, 249, 249);
+    --color-main-nav: rgb(12, 35, 64);
+    --color-lower-nav: #29446b;
+    --color-link: rgb(167, 198, 237);
+    --font-main: "Georgia", serif;
+    --weight-text: 400;
+    --weight-bold: 700;
+    --size-text: 16px;
+}
+
+body {
+    background-color: var(--color-main-nav);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-weight: var(--weight-text);
+    font-size: var(--size-text);
+    margin: 0;
+}
