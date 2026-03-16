@@ -20,11 +20,11 @@
             <tr><th>Metric</th><th>Value</th></tr>
         </thead>
         <tbody>
-            <tr><td>Land Value per Sqft</td><td>{data?.landValuePerSqft ?? '—'}</td></tr>
-            <tr><td>Net Taxes per Sqft</td><td>{data?.netTaxesPerSqft ?? '—'}</td></tr>
-            <tr><td>Land Share of Property</td><td>{data?.landShareOfProperty ?? '—'}</td></tr>
+            <tr><td>Land Value per Sqft</td><td>{data?.landValuePerSqft ?? '-'}</td></tr>
+            <tr><td>Net Taxes per Sqft</td><td>{data?.netTaxesPerSqft ?? '-'}</td></tr>
+            <tr><td>Land Share of Property</td><td>{data?.landShareOfProperty ?? '-'}</td></tr>
             <tr
-                ><td>Land Value Alignment Index</td><td>{data?.landValueAlignmentIndex ?? '—'}</td
+                ><td>Land Value Alignment Index</td><td>{data?.landValueAlignmentIndex ?? '-'}</td
                 ></tr
             >
         </tbody>

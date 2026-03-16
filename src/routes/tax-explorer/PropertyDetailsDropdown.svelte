@@ -23,33 +23,33 @@
     <ul class="dropdown-menu">
         <li>
             <span class="key">Property Class</span><span class="val"
-                >{data?.propertyClass ?? '—'}</span
+                >{data?.propertyClass ?? '-'}</span
             >
         </li>
         <li>
-            <span class="key">Property Use</span><span class="val">{data?.propertyUse ?? '—'}</span>
+            <span class="key">Property Use</span><span class="val">{data?.propertyUse ?? '-'}</span>
         </li>
         <li>
-            <span class="key">Year Built</span><span class="val">{data?.yearBuilt ?? '—'}</span>
+            <span class="key">Year Built</span><span class="val">{data?.yearBuilt ?? '-'}</span>
         </li>
-        <li><span class="key">Bedrooms</span><span class="val">{data?.bedrooms ?? '—'}</span></li>
+        <li><span class="key">Bedrooms</span><span class="val">{data?.bedrooms ?? '-'}</span></li>
         <li>
-            <span class="key">Full Baths</span><span class="val">{data?.fullBaths ?? '—'}</span>
+            <span class="key">Full Baths</span><span class="val">{data?.fullBaths ?? '-'}</span>
         </li>
         <li>
-            <span class="key">Half Baths</span><span class="val">{data?.halfBaths ?? '—'}</span>
+            <span class="key">Half Baths</span><span class="val">{data?.halfBaths ?? '-'}</span>
         </li>
         <li>
             <span class="key">Total Living Area</span><span class="val"
-                >{data?.totalLivingArea ?? '—'}</span
+                >{data?.totalLivingArea ?? '-'}</span
             >
         </li>
         <li>
-            <span class="key">Home Style</span><span class="val">{data?.homeStyle ?? '—'}</span>
+            <span class="key">Home Style</span><span class="val">{data?.homeStyle ?? '-'}</span>
         </li>
         <li>
             <span class="key">Multi Story</span><span class="val"
-                >{data == null ? '—' : data.multiStory ? 'Yes' : 'No'}</span
+                >{data == null ? '-' : data.multiStory ? 'Yes' : 'No'}</span
             >
         </li>
     </ul>
