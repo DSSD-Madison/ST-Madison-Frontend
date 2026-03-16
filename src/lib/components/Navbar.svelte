@@ -1,17 +1,19 @@
 <script lang="ts">
-    import { resolve } from '$app/paths';
-    import Icon from '@iconify/svelte';
+  import { resolve } from "$app/paths";
+  import IconHome from '~icons/lets-icons/home-duotone';
+  import IconPaper from '~icons/lets-icons/paper-duotone';
+  import IconChart from '~icons/lets-icons/chart-duotone';
+  import IconMap from '~icons/lets-icons/map-duotone';
 </script>
 
 <nav class="navbar">
-    <a href={resolve('/')}><h1>Strong Towns Tax Explorer</h1></a>
-    <div class="spacer"></div>
-    <a href={resolve('/')} class="nav-link"><Icon icon="lets-icons:home-duotone" />Home</a>
-    <a href={resolve('/tax-explorer')} class="nav-link"
-        ><Icon icon="lets-icons:paper-duotone" />Tax Explorer</a
-    >
-    <a href={resolve('/charts')} class="nav-link"><Icon icon="lets-icons:chart-duotone" />Charts</a>
-    <a href={resolve('/map')} class="nav-link"><Icon icon="lets-icons:map-duotone" />Map</a>
+  <a href={resolve("/")}><h1>Strong Towns Tax Explorer</h1></a>
+  <div class="spacer"></div>
+  <a href={resolve("/")} class="nav-link"><IconHome />Home</a>
+  <a href={resolve("/tax-explorer")} class="nav-link"><IconPaper />Tax Explorer</a>
+
+  <a href={resolve("/charts")} class="nav-link"><IconChart />Charts</a>
+  <a href={resolve("/map")} class="nav-link"><IconMap />Map</a>
 </nav>
 
 <style>
