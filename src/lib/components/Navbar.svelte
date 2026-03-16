@@ -11,7 +11,6 @@
   <div class="spacer"></div>
   <a href={resolve("/")} class="nav-link"><IconHome />Home</a>
   <a href={resolve("/tax-explorer")} class="nav-link"><IconPaper />Tax Explorer</a>
-
   <a href={resolve("/charts")} class="nav-link"><IconChart />Charts</a>
   <a href={resolve("/map")} class="nav-link"><IconMap />Map</a>
 </nav>
