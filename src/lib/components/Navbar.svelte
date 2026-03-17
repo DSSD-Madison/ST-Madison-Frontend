@@ -18,6 +18,7 @@
     gap: 1rem;
     padding: 1rem;
     background-color: var(--color-lower-nav);
+    font-family: var(--font-main), "serif";
   }
 
   .spacer {
@@ -47,3 +48,4 @@
     }
   }
 </style>
+
