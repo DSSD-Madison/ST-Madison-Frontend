@@ -17,7 +17,7 @@
     "devDependencies": {
         "@eslint/compat": "^2.0.1",
         "@eslint/js": "^9.39.2",
-        "@iconify/svelte": "^5.2.1",
+        "@iconify-json/lets-icons": "^1.2.2",
         "@sveltejs/adapter-auto": "^7.0.0",
         "@sveltejs/adapter-cloudflare": "^7.2.8",
         "@sveltejs/kit": "^2.50.1",
@@ -33,10 +33,12 @@
         "svelte-check": "^4.3.5",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.53.1",
+        "unplugin-icons": "^23.0.1",
         "vite": "^7.3.1",
         "wrangler": "^4.68.1"
     },
     "dependencies": {
-        "maplibre-gl": "^5.18.0"
+        "maplibre-gl": "^5.18.0",
+        "pmtiles": "^4.4.0"
     }
 }
