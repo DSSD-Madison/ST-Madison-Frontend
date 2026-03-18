@@ -37,14 +37,72 @@
         type VectorSourceSpecification
     } from 'maplibre-gl';
     import 'maplibre-gl/dist/maplibre-gl.css';
+    import type { MetricConfig } from '$lib/config/metrics';
 
-    // Configurable props
-    export let center: [number, number] = [-89.3844, 43.0747];
-    export let zoom: number = 12;
-    export let tileAddress: string | null = null;
+    type Props = {
+        center?: [number, number];
+        zoom?: number;
+        tileAddress?: string | null;
+        activeMetric?: MetricConfig | null;
+    };
+
+    let {
+        center = [-89.3844, 43.0747],
+        zoom = 12,
+        tileAddress = null,
+        activeMetric = null
+    }: Props = $props();
 
     let mapContainer: HTMLDivElement;
-    let map: Map | null = null;
+    let map: Map | null = $state(null);
+
+    const DEFAULT_FILL_COLOR = '#1d4ed8';
+    const DEFAULT_FILL_OPACITY = 0.14;
+    const METRIC_FILL_OPACITY = 0.7;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function buildFillColor(metric: MetricConfig): any {
+        if (metric.type === 'numeric') {
+            const stops: (number | string)[] = [];
+            for (const [value, color] of metric.stops) {
+                stops.push(value, color);
+            }
+            return [
+                'interpolate',
+                ['linear'],
+                ['coalesce', ['get', metric.key], 0],
+                ...stops
+            ];
+        }
+
+        // categorical
+        const pairs: (string)[] = [];
+        for (const [category, color] of Object.entries(metric.categories)) {
+            pairs.push(category, color);
+        }
+        return ['match', ['get', metric.key], ...pairs, metric.fallbackColor];
+    }
+
+    function applyMetricStyle(currentMap: Map, metric: MetricConfig | null) {
+        if (!currentMap.getLayer('parcel-fill')) return;
+
+        if (!metric) {
+            currentMap.setPaintProperty('parcel-fill', 'fill-color', DEFAULT_FILL_COLOR);
+            currentMap.setPaintProperty('parcel-fill', 'fill-opacity', DEFAULT_FILL_OPACITY);
+            currentMap.setLayoutProperty('parcel-outline', 'visibility', 'visible');
+            return;
+        }
+
+        currentMap.setPaintProperty('parcel-fill', 'fill-color', buildFillColor(metric));
+        currentMap.setPaintProperty('parcel-fill', 'fill-opacity', METRIC_FILL_OPACITY);
+        currentMap.setLayoutProperty('parcel-outline', 'visibility', 'none');
+    }
+
+    $effect(() => {
+        if (map) {
+            applyMetricStyle(map, activeMetric);
+        }
+    });
 
     function addParcelLayers(currentMap: Map) {
         if (!tileAddress || currentMap.getSource(PARCEL_SOURCE_ID)) {
@@ -59,14 +117,17 @@
             url: `pmtiles://${tileAddress}`
         };
 
+        const fillColor = activeMetric ? buildFillColor(activeMetric) : DEFAULT_FILL_COLOR;
+        const fillOpacity = activeMetric ? METRIC_FILL_OPACITY : DEFAULT_FILL_OPACITY;
+
         const parcelFillLayer: FillLayerSpecification = {
             id: 'parcel-fill',
             type: 'fill',
             source: PARCEL_SOURCE_ID,
             'source-layer': PARCEL_SOURCE_LAYER,
             paint: {
-                'fill-color': '#1d4ed8',
-                'fill-opacity': 0.14
+                'fill-color': fillColor,
+                'fill-opacity': fillOpacity
             }
         };
 
