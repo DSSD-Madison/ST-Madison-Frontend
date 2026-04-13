@@ -3,10 +3,16 @@
   import IconHome from '~icons/lets-icons/home-duotone';
   import IconChart from '~icons/lets-icons/chart-duotone';
   import IconMap from '~icons/lets-icons/map-duotone';
+  import Logo from './Logo.svelte';
 </script>
 
 <nav class="navbar">
-  <a href={resolve("/")}><h1>Strong Towns Tax Explorer</h1></a>
+  <a href={resolve("/")}>
+    <h1>
+      <Logo />
+      Madison Tax Explorer
+    </h1>
+  </a>
   <div class="spacer"></div>
   <a href={resolve("/")} class="nav-link"><IconHome />Home</a>
   <a href={resolve("/charts")} class="nav-link"><IconChart />Charts</a>
@@ -21,6 +27,12 @@
     padding: 1rem;
     background-color: var(--color-lower-nav);
     font-family: var(--font-main), "serif";
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .spacer {
