@@ -8,6 +8,7 @@
 
 <svelte:head>
     <link rel="icon" href={favicon} />
+    <title>Madison Tax Explorer</title>
 </svelte:head>
 
 <div class="app-container">
