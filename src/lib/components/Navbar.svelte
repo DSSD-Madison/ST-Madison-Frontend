@@ -19,8 +19,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background-color: #f5f5f5;
-    border-bottom: #ccc solid 1px;
+    background-color: var(--color-lower-nav);
+    font-family: var(--font-main), "serif";
   }
 
   .spacer {
@@ -29,12 +29,12 @@
 
   .navbar h1 {
     margin: 0;
+    color: var(--color-text);
     font-size: 1.25rem;
   }
 
   .navbar a {
     text-decoration: none;
-    color: #333;
   }
 
   .nav-link {
@@ -43,10 +43,12 @@
     gap: 0.5rem;
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
-    background-color: #ececec;
+    color: var(--color-main-nav);
+    background-color: var(--color-link);
     transition: background-color 0.2s ease;
     &:hover {
       background-color: #dcdcdc;
     }
   }
 </style>
+

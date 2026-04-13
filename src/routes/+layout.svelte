@@ -1,4 +1,5 @@
 <script lang="ts">
+    import '../app.css';
     import favicon from '$lib/assets/favicon.svg';
     import Navbar from '$lib/components/Navbar.svelte';
 
@@ -19,7 +20,6 @@
 <style>
     :global(body) {
         margin: 0;
-        font-family: system-ui, sans-serif;
     }
 
     .app-container {
