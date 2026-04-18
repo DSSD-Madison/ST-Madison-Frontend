@@ -16,8 +16,8 @@
 <div class="bar-chart-box">
     <span class="chart-label">{label}</span>
     <svg viewBox="0 0 120 80" class="bar-chart">
-        <line x1="10" y1="70" x2="110" y2="70" stroke="#ccc" stroke-width="1" />
-        <line x1="10" y1="5" x2="10" y2="70" stroke="#ccc" stroke-width="1" />
+        <line x1="10" y1="70" x2="110" y2="70" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+        <line x1="10" y1="5" x2="10" y2="70" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
         {#each bars as h, i (i)}
             <rect
                 x={15 + i * 24}
@@ -40,7 +40,7 @@
 
     .chart-label {
         font-size: 0.75rem;
-        color: #666;
+        color: rgba(249, 249, 249, 0.55);
     }
 
     .bar-chart {

@@ -148,7 +148,7 @@
     .search-section label {
         display: block;
         font-size: 0.85rem;
-        color: #555;
+        color: rgba(249, 249, 249, 0.55);
         margin-bottom: 0.4rem;
     }
 
@@ -164,9 +164,10 @@
 
     .dropdown-btn {
         padding: 0.45rem 0.75rem;
-        border: 1.5px solid #333;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
         border-radius: 6px;
-        background: #fff;
+        background: transparent;
+        color: var(--color-text);
         font-family: inherit;
         font-size: 0.9rem;
         cursor: pointer;
@@ -216,19 +217,18 @@
         align-items: center;
         gap: 0.3rem;
         padding: 0.25rem 0.6rem;
-        border: 1px solid #ccc;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 4px;
-        background: #fff;
+        background: transparent;
         font-family: inherit;
         font-size: 0.8rem;
         cursor: pointer;
-        color: #555;
+        color: rgba(249, 249, 249, 0.55);
     }
 
     .toggle-btn.active {
-        border-color: #555;
-        background: #fff;
-        color: #222;
+        border-color: rgba(255, 255, 255, 0.45);
+        color: var(--color-text);
     }
 
     .dot {
@@ -236,7 +236,7 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: #ccc;
+        background: rgba(249, 249, 249, 0.3);
     }
 
     .toggle-btn.active .dot {

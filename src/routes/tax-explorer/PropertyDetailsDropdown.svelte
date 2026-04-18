@@ -60,15 +60,15 @@
         position: absolute;
         top: calc(100% + 4px);
         left: 0;
-        background: #fff;
-        border: 1.5px solid #333;
+        background: var(--color-lower-nav);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
         border-radius: 6px;
         padding: 0.25rem 0;
         margin: 0;
         list-style: none;
         z-index: 10;
         min-width: 280px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
     li {
@@ -79,11 +79,11 @@
     }
 
     .key {
-        color: #555;
+        color: rgba(249, 249, 249, 0.55);
     }
 
     .val {
-        color: #222;
+        color: var(--color-text);
         font-weight: 500;
     }
 </style>

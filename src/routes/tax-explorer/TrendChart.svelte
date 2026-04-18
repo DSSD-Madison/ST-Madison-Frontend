@@ -29,8 +29,8 @@
 <div class="chart-box">
     <span class="chart-label">{label}</span>
     <svg viewBox="0 0 200 100" class="line-chart">
-        <line x1="10" y1="90" x2="190" y2="90" stroke="#ccc" stroke-width="1" />
-        <line x1="10" y1="10" x2="10" y2="90" stroke="#ccc" stroke-width="1" />
+        <line x1="10" y1="90" x2="190" y2="90" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+        <line x1="10" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
         {#if data}
             <path d={buildPath(data)} fill="none" stroke={color} stroke-width="2" />
         {/if}
@@ -46,7 +46,7 @@
 
     .chart-label {
         font-size: 0.75rem;
-        color: #666;
+        color: rgba(249, 249, 249, 0.55);
     }
 
     .line-chart {

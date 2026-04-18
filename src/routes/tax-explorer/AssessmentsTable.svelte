@@ -32,7 +32,7 @@
 
 <style>
     .table-card {
-        border: 1.5px solid #ccc;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
         border-radius: 8px;
         padding: 0.75rem 1rem;
     }
@@ -41,7 +41,7 @@
         font-size: 0.9rem;
         font-weight: 600;
         margin: 0 0 0.5rem;
-        color: #555;
+        color: rgba(249, 249, 249, 0.55);
     }
 
     table {
@@ -54,21 +54,21 @@
         text-align: left;
         font-weight: 600;
         padding: 0.25rem 0.5rem 0.4rem;
-        border-bottom: 1px solid #ddd;
-        color: #444;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        color: rgba(249, 249, 249, 0.7);
     }
 
     td {
         padding: 0.3rem 0.5rem;
-        color: #333;
+        color: var(--color-text);
     }
 
     td:last-child {
         text-align: right;
-        color: #999;
+        color: rgba(249, 249, 249, 0.65);
     }
 
     tr:not(:last-child) td {
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
 </style>

@@ -51,10 +51,10 @@
         y1={chartBottom}
         x2={chartRight}
         y2={chartBottom}
-        stroke="#ccc"
+        stroke="rgba(255,255,255,0.2)"
         stroke-width="1"
     />
-    <line x1={chartX} y1={chartTop} x2={chartX} y2={chartBottom} stroke="#ccc" stroke-width="1" />
+    <line x1={chartX} y1={chartTop} x2={chartX} y2={chartBottom} stroke="rgba(255,255,255,0.2)" stroke-width="1" />
 
     <!-- Bars -->
     {#each years as year, i (year)}
@@ -69,7 +69,7 @@
             />
         {/each}
         <!-- Year label -->
-        <text x={yearLabelX(i)} y="105" text-anchor="middle" font-size="9" fill="#666">{year}</text>
+        <text x={yearLabelX(i)} y="105" text-anchor="middle" font-size="9" fill="rgba(249,249,249,0.55)">{year}</text>
     {/each}
 </svg>
 
