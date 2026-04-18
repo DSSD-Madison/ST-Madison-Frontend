@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import IconHome from '~icons/lets-icons/home-duotone';
+  import IconPaper from '~icons/lets-icons/paper-duotone';
   import IconChart from '~icons/lets-icons/chart-duotone';
   import IconMap from '~icons/lets-icons/map-duotone';
   import Logo from './Logo.svelte';
@@ -15,6 +16,7 @@
   </a>
   <div class="spacer"></div>
   <a href={resolve("/")} class="nav-link"><IconHome />Home</a>
+  <a href={resolve("/tax-explorer")} class="nav-link"><IconPaper />Tax Explorer</a>
   <a href={resolve("/charts")} class="nav-link"><IconChart />Charts</a>
   <a href={resolve("/map")} class="nav-link"><IconMap />Map</a>
 </nav>
