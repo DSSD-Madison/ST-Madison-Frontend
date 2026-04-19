@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { LayerCake, Svg } from 'layercake';
+    import Line from '$lib/components/graphs/Line.svelte';
+    import Area from '$lib/components/graphs/Area.svelte';
+
     interface Props {
         label: string;
         color: string;
@@ -7,34 +11,19 @@
 
     let { label, color, data }: Props = $props();
 
-    function buildPath(points: number[]): string {
-        if (points.length < 2) return '';
-        const xMin = 10,
-            xMax = 190,
-            yMin = 10,
-            yMax = 90;
-        const min = Math.min(...points);
-        const max = Math.max(...points);
-        const ySpan = max - min || 1;
-        return points
-            .map((v, i) => {
-                const x = xMin + (i / (points.length - 1)) * (xMax - xMin);
-                const y = yMax - ((v - min) / ySpan) * (yMax - yMin);
-                return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
-            })
-            .join(' ');
-    }
+    const chartData = $derived((data ?? []).map((y, x) => ({ x, y })));
 </script>
 
 <div class="chart-box">
     <span class="chart-label">{label}</span>
-    <svg viewBox="0 0 200 100" class="line-chart">
-        <line x1="10" y1="90" x2="190" y2="90" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-        <line x1="10" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-        {#if data}
-            <path d={buildPath(data)} fill="none" stroke={color} stroke-width="2" />
-        {/if}
-    </svg>
+    <div class="chart-container">
+        <LayerCake padding={{ top: 5, right: 5, bottom: 5, left: 5 }} x="x" y="y" data={chartData}>
+            <Svg>
+                <Area fill="{color}30" />
+                <Line stroke={color} />
+            </Svg>
+        </LayerCake>
+    </div>
 </div>
 
 <style>
@@ -49,9 +38,8 @@
         color: rgba(249, 249, 249, 0.55);
     }
 
-    .line-chart {
+    .chart-container {
         width: 100%;
-        height: auto;
-        display: block;
+        height: 80px;
     }
 </style>

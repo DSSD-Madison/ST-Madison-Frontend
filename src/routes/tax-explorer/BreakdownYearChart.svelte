@@ -1,4 +1,9 @@
 <script lang="ts">
+    import { LayerCake, Svg, stack } from 'layercake';
+    import { scaleBand, scaleOrdinal } from 'd3-scale';
+    import ColumnStacked from '$lib/components/graphs/ColumnStacked.svelte';
+    import AxisX from '$lib/components/graphs/AxisX.svelte';
+
     interface Source {
         label: string;
         values: number[];
@@ -12,71 +17,60 @@
 
     let { years, sources, colors }: Props = $props();
 
-    const chartX = 30;
-    const chartRight = 460;
-    const chartTop = 10;
-    const chartBottom = 90;
-    const chartWidth = $derived(chartRight - chartX);
-    const chartHeight = chartBottom - chartTop;
+    const keys = $derived(sources.map((s) => s.label));
 
-    const globalMax = $derived(Math.max(...sources.flatMap((s) => s.values)));
-    const groupWidth = $derived(chartWidth / years.length);
-    const barWidth = 14;
-    const barGap = 3;
-    const clusterWidth = $derived(sources.length * barWidth + (sources.length - 1) * barGap);
+    const rowData = $derived(
+        years.map((year, i) => {
+            const row: Record<string, string | number> = { year: String(year) };
+            sources.forEach((s) => {
+                row[s.label] = s.values[i];
+            });
+            return row;
+        })
+    );
 
-    function barX(yearIndex: number, sourceIndex: number): number {
-        const groupStart = chartX + yearIndex * groupWidth;
-        const clusterStart = groupStart + (groupWidth - clusterWidth) / 2;
-        return clusterStart + sourceIndex * (barWidth + barGap);
-    }
+    const stackedData = $derived(stack(rowData, keys));
+    const flatData = $derived(stackedData.flat());
 
-    function barY(value: number): number {
-        return chartBottom - (value / globalMax) * chartHeight;
-    }
+    const maxY = $derived(
+        Math.max(...years.map((_, i) => sources.reduce((sum, s) => sum + s.values[i], 0)))
+    );
 
-    function barH(value: number): number {
-        return (value / globalMax) * chartHeight;
-    }
-
-    function yearLabelX(yearIndex: number): number {
-        return chartX + yearIndex * groupWidth + groupWidth / 2;
-    }
+    const zRange = $derived(keys.map((k) => colors[k]));
 </script>
 
-<svg viewBox="0 0 480 110" class="year-chart">
-    <!-- Axes -->
-    <line
-        x1={chartX}
-        y1={chartBottom}
-        x2={chartRight}
-        y2={chartBottom}
-        stroke="rgba(255,255,255,0.2)"
-        stroke-width="1"
-    />
-    <line x1={chartX} y1={chartTop} x2={chartX} y2={chartBottom} stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-
-    <!-- Bars -->
-    {#each years as year, i (year)}
-        {#each sources as source, j (source.label)}
-            <rect
-                x={barX(i, j)}
-                y={barY(source.values[i])}
-                width={barWidth}
-                height={barH(source.values[i])}
-                fill={colors[source.label]}
-                opacity="0.85"
-            />
-        {/each}
-        <!-- Year label -->
-        <text x={yearLabelX(i)} y="105" text-anchor="middle" font-size="9" fill="rgba(249,249,249,0.55)">{year}</text>
-    {/each}
-</svg>
+<div class="chart-container">
+    <LayerCake
+        padding={{ top: 5, right: 5, bottom: 20, left: 5 }}
+        x={(d: any) => d.data.year}
+        y={(d: any) => d}
+        z="key"
+        xScale={scaleBand().padding(0.1)}
+        zScale={scaleOrdinal()}
+        zDomain={keys}
+        {zRange}
+        yDomain={[0, maxY]}
+        data={stackedData}
+        {flatData}
+    >
+        <Svg>
+            <AxisX gridlines={false} tickMarks={true} />
+            <ColumnStacked />
+        </Svg>
+    </LayerCake>
+</div>
 
 <style>
-    .year-chart {
+    .chart-container {
         width: 100%;
-        height: auto;
-        display: block;
+        height: 130px;
+    }
+
+    .chart-container :global(.tick text) {
+        fill: rgba(249, 249, 249, 0.55);
+    }
+
+    .chart-container :global(.tick line) {
+        stroke: rgba(255, 255, 255, 0.15);
     }
 </style>

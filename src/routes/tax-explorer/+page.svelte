@@ -4,7 +4,6 @@
     import AssessmentsTable from './AssessmentsTable.svelte';
     import LandEfficiencyTable from './LandEfficiencyTable.svelte';
     import BreakdownBarChart from './BreakdownBarChart.svelte';
-    import BreakdownYearChart from './BreakdownYearChart.svelte';
     import PropertySearch from './PropertySearch.svelte';
     import PropertyDetailsDropdown from './PropertyDetailsDropdown.svelte';
     import TrendChart from './TrendChart.svelte';
@@ -111,15 +110,21 @@
                         label={group.label}
                         bars={group.values}
                         color={barColors[group.label]}
+                        xLabels={taxBreakdownYears}
                     />
                 {/each}
             </div>
         {:else}
-            <BreakdownYearChart
-                years={taxBreakdownYears}
-                sources={taxBreakdown}
-                colors={barColors}
-            />
+            <div class="bar-charts-row">
+                {#each taxBreakdownYears as year, i (year)}
+                    <BreakdownBarChart
+                        label={String(year)}
+                        bars={taxBreakdown.map((s) => s.values[i])}
+                        colors={taxBreakdown.map((s) => barColors[s.label])}
+                        xLabels={taxBreakdown.map((s) => s.label)}
+                    />
+                {/each}
+            </div>
         {/if}
     </div>
 </div>
