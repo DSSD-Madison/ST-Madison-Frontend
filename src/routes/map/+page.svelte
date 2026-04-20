@@ -17,30 +17,29 @@
     let parcelFilterOptions: ParcelFilterOptions = $state(EMPTY_PARCEL_FILTER_OPTIONS);
 </script>
 
-<div class="map-page">
-    <Map
-        tileAddress={PUBLIC_TILE_ADDRESS || null}
-        {activeMetric}
-        filters={parcelFilters}
-        oncomputedstops={(s: Record<string, [number, string][]>) => (computedStops = s)}
-        oncomputedvalues={(v: Record<string, number[]>) => (computedValues = v)}
-        onfilteroptions={(options: ParcelFilterOptions) => (parcelFilterOptions = options)}
-    />
-    <MetricPicker
-        {activeMetric}
-        {computedStops}
-        {computedValues}
-        filters={parcelFilters}
-        filterOptions={parcelFilterOptions}
-        onchange={(m: MetricConfig | null) => (activeMetric = m)}
-        onfilterchange={(next: ParcelFilterState) => (parcelFilters = next)}
-    />
-</div>
+<Map
+    tileAddress={PUBLIC_TILE_ADDRESS || null}
+    {activeMetric}
+    filters={parcelFilters}
+    oncomputedstops={(s: Record<string, [number, string][]>) => (computedStops = s)}
+    oncomputedvalues={(v: Record<string, number[]>) => (computedValues = v)}
+    onfilteroptions={(options: ParcelFilterOptions) => (parcelFilterOptions = options)}
+/>
+<MetricPicker
+    {activeMetric}
+    {computedStops}
+    {computedValues}
+    filters={parcelFilters}
+    filterOptions={parcelFilterOptions}
+    onchange={(m: MetricConfig | null) => (activeMetric = m)}
+    onfilterchange={(next: ParcelFilterState) => (parcelFilters = next)}
+/>
 
 <style>
     .map-page {
         position: relative;
         width: 100%;
         height: 100%;
+        flex: 1;
     }
 </style>
