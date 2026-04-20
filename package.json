@@ -39,6 +39,7 @@
         "wrangler": "^4.68.1"
     },
     "dependencies": {
+        "@floating-ui/dom": "^1.7.6",
         "d3-scale": "^4.0.2",
         "layercake": "^10.0.2",
         "maplibre-gl": "^5.18.0",

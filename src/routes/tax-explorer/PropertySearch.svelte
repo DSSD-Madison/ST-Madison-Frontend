@@ -146,7 +146,9 @@
         border-radius: 6px;
         cursor: pointer;
         color: var(--color-link);
-        transition: background 0.1s, color 0.1s;
+        transition:
+            background 0.1s,
+            color 0.1s;
     }
 
     li:hover,
