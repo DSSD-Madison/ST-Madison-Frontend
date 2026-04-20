@@ -47,6 +47,13 @@ export interface ParcelData {
     propertyDetails: PropertyDetailsData;
 }
 
+export async function searchAddresses(query: string): Promise<string[]> {
+    const url = `${PUBLIC_API_URL}/search?q=${encodeURIComponent(query)}`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    return res.json() as Promise<string[]>;
+}
+
 export async function fetchParcel(address: string): Promise<ParcelData> {
     const url = `${PUBLIC_API_URL}/parcel/${encodeURIComponent(address)}`;
     const res = await fetch(url);
