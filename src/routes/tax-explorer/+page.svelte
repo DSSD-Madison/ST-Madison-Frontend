@@ -238,6 +238,12 @@
         margin-bottom: 2rem;
     }
 
+    @media (max-width: 768px) {
+        .tables-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
     .section {
         margin-bottom: 2rem;
     }
