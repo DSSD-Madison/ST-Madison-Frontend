@@ -256,24 +256,21 @@
 
     .toggle-group {
         display: flex;
-        background: rgba(255, 255, 255, 0.08);
+        background: #385A8A;
         border-radius: 999px;
-        padding: 3px;
-        gap: 2px;
+        padding: 4px;
     }
 
     .toggle-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.3rem 0.9rem;
+        padding: 0.3rem 1rem;
         border: none;
         border-radius: 999px;
         background: transparent;
         font-family: inherit;
         font-size: 0.8rem;
+        font-weight: 500;
         cursor: pointer;
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
         transition: background 0.15s, color 0.15s;
     }
 
