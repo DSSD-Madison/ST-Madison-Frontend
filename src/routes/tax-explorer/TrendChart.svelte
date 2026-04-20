@@ -48,7 +48,7 @@
 
     .chart-label {
         font-size: 0.8rem;
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
     }
 
     .chart-container {
@@ -60,6 +60,6 @@
         display: flex;
         justify-content: space-between;
         font-size: 0.7rem;
-        color: rgba(249, 249, 249, 0.4);
+        color: var(--color-link);
     }
 </style>

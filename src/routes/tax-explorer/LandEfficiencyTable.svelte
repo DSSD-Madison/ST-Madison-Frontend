@@ -64,12 +64,11 @@
 
     .row-label {
         font-size: 0.875rem;
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
     }
 
     .row-value {
         font-size: 0.875rem;
         font-weight: 500;
-        color: var(--color-link);
     }
 </style>

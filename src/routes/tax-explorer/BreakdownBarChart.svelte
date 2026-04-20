@@ -50,7 +50,7 @@
 
     .chart-label {
         font-size: 0.8rem;
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
     }
 
     .chart-container {

@@ -79,7 +79,7 @@
     }
 
     .key {
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
     }
 
     .val {

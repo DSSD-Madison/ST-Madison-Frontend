@@ -193,7 +193,7 @@
     .search-field label {
         display: block;
         font-size: 0.8rem;
-        color: rgba(249, 249, 249, 0.55);
+        color: var(--color-link);
         margin-bottom: 0.4rem;
     }
 
