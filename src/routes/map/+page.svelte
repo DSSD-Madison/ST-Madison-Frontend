@@ -5,11 +5,18 @@
     import { PUBLIC_TILE_ADDRESS } from '$env/static/public';
 
     let activeMetric: MetricConfig | null = $state(null);
+    let computedStops: Record<string, [number, string][]> = $state({});
+    let computedValues: Record<string, number[]> = $state({});
 </script>
 
 <div class="map-page">
-    <Map tileAddress={PUBLIC_TILE_ADDRESS || null} {activeMetric} />
-    <MetricPicker {activeMetric} onchange={(m) => (activeMetric = m)} />
+    <Map
+        tileAddress={PUBLIC_TILE_ADDRESS || null}
+        {activeMetric}
+        oncomputedstops={(s) => (computedStops = s)}
+        oncomputedvalues={(v) => (computedValues = v)}
+    />
+    <MetricPicker {activeMetric} {computedStops} {computedValues} onchange={(m) => (activeMetric = m)} />
 </div>
 
 <style>

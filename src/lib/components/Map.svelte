@@ -37,23 +37,31 @@
         type VectorSourceSpecification
     } from 'maplibre-gl';
     import 'maplibre-gl/dist/maplibre-gl.css';
-    import type { MetricConfig } from '$lib/config/metrics';
+    import { metrics, type MetricConfig } from '$lib/config/metrics';
+    import { computeStops } from '$lib/utils/colorScale';
     import type { ParcelTileProperties } from '$lib/api';
     import Tooltip from '$lib/components/Tooltip.svelte';
+    import { formatMetricValue } from '$lib/utils/formatting';
 
     type Props = {
         center?: [number, number];
         zoom?: number;
         tileAddress?: string | null;
         activeMetric?: MetricConfig | null;
+        oncomputedstops?: (stops: Record<string, [number, string][]>) => void;
+        oncomputedvalues?: (values: Record<string, number[]>) => void;
     };
 
     let {
         center = [-89.3844, 43.0747],
         zoom = 12,
         tileAddress = null,
-        activeMetric = null
+        activeMetric = null,
+        oncomputedstops,
+        oncomputedvalues
     }: Props = $props();
+
+    let computedStops = $state<Record<string, [number, string][]>>({});
 
     let mapContainer: HTMLDivElement;
     let map: Map | null = $state(null);
@@ -70,32 +78,16 @@
     const DEFAULT_FILL_OPACITY = 0.14;
     const METRIC_FILL_OPACITY = 0.7;
 
-    function formatMetricValue(value: unknown, metric: MetricConfig): string {
-        const num = typeof value === 'number' ? value : parseFloat(String(value));
-        if (isNaN(num)) return '—';
-        if (metric.type === 'categorical') return String(value);
-        switch (metric.format) {
-            case 'currency':
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                    maximumFractionDigits: 0
-                }).format(num);
-            case 'percent':
-                return num.toFixed(2) + '%';
-            default:
-                return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(num);
-        }
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function buildFillColor(metric: MetricConfig): any {
+    function buildFillColor(metric: MetricConfig, stops: [number, string][]): any {
         if (metric.type === 'numeric') {
-            const stops: (number | string)[] = [];
-            for (const [value, color] of metric.stops) {
-                stops.push(value, color);
-            }
-            return ['interpolate', ['linear'], ['coalesce', ['get', metric.key], 0], ...stops];
+            if (stops.length === 0) return DEFAULT_FILL_COLOR;
+            return [
+                'interpolate',
+                ['linear'],
+                ['coalesce', ['get', metric.key], 0],
+                ...stops.flatMap(([v, c]) => [v, c])
+            ];
         }
 
         // categorical
@@ -116,7 +108,10 @@
             return;
         }
 
-        currentMap.setPaintProperty('parcel-fill', 'fill-color', buildFillColor(metric));
+        const stops = metric.type === 'numeric' ? (computedStops[metric.key] ?? []) : [];
+        if (metric.type === 'numeric' && stops.length === 0) return;
+
+        currentMap.setPaintProperty('parcel-fill', 'fill-color', buildFillColor(metric, stops));
         currentMap.setPaintProperty('parcel-fill', 'fill-opacity', METRIC_FILL_OPACITY);
         currentMap.setLayoutProperty('parcel-outline', 'visibility', 'none');
     }
@@ -126,6 +121,33 @@
             applyMetricStyle(map, activeMetric);
         }
     });
+
+    // Re-apply style once stops are computed (computedStops changes trigger this effect)
+    $effect(() => {
+        void computedStops;
+        if (map && activeMetric) {
+            applyMetricStyle(map, activeMetric);
+        }
+    });
+
+    function computeAllStops(currentMap: Map) {
+        const features = currentMap.querySourceFeatures(PARCEL_SOURCE_ID, {
+            sourceLayer: PARCEL_SOURCE_LAYER
+        });
+        const nextStops: Record<string, [number, string][]> = {};
+        const nextValues: Record<string, number[]> = {};
+        for (const metric of metrics) {
+            if (metric.type !== 'numeric') continue;
+            const vals = features
+                .map((f) => f.properties?.[metric.key])
+                .filter((v): v is number => typeof v === 'number');
+            nextStops[metric.key] = computeStops(vals, metric.colorScheme, metric.scaleType);
+            nextValues[metric.key] = vals;
+        }
+        computedStops = nextStops;
+        oncomputedstops?.(nextStops);
+        oncomputedvalues?.(nextValues);
+    }
 
     function addParcelLayers(currentMap: Map) {
         if (!tileAddress || currentMap.getSource(PARCEL_SOURCE_ID)) {
@@ -140,17 +162,14 @@
             url: `pmtiles://${tileAddress}`
         };
 
-        const fillColor = activeMetric ? buildFillColor(activeMetric) : DEFAULT_FILL_COLOR;
-        const fillOpacity = activeMetric ? METRIC_FILL_OPACITY : DEFAULT_FILL_OPACITY;
-
         const parcelFillLayer: FillLayerSpecification = {
             id: 'parcel-fill',
             type: 'fill',
             source: PARCEL_SOURCE_ID,
             'source-layer': PARCEL_SOURCE_LAYER,
             paint: {
-                'fill-color': fillColor,
-                'fill-opacity': fillOpacity
+                'fill-color': DEFAULT_FILL_COLOR,
+                'fill-opacity': DEFAULT_FILL_OPACITY
             }
         };
 
@@ -169,6 +188,8 @@
         currentMap.addSource(PARCEL_SOURCE_ID, parcelSource);
         currentMap.addLayer(parcelFillLayer);
         currentMap.addLayer(parcelOutlineLayer);
+
+        currentMap.once('idle', () => computeAllStops(currentMap));
 
         currentMap.on('mousemove', 'parcel-fill', (e) => {
             const features = currentMap.queryRenderedFeatures(e.point, { layers: ['parcel-fill'] });
