@@ -38,6 +38,15 @@
     } from 'maplibre-gl';
     import 'maplibre-gl/dist/maplibre-gl.css';
     import { metrics, type MetricConfig } from '$lib/config/metrics';
+    import {
+        buildParcelFilterOptions,
+        EMPTY_PARCEL_FILTERS,
+        isParcelFilterStateEmpty,
+        matchesParcelFilters,
+        normalizeParcelFilters,
+        type ParcelFilterOptions,
+        type ParcelFilterState
+    } from '$lib/config/parcelFilters';
     import { computeStops } from '$lib/utils/colorScale';
     import type { ParcelTileProperties } from '$lib/api';
     import Tooltip from '$lib/components/Tooltip.svelte';
@@ -48,8 +57,10 @@
         zoom?: number;
         tileAddress?: string | null;
         activeMetric?: MetricConfig | null;
+        filters?: ParcelFilterState;
         oncomputedstops?: (stops: Record<string, [number, string][]>) => void;
         oncomputedvalues?: (values: Record<string, number[]>) => void;
+        onfilteroptions?: (options: ParcelFilterOptions) => void;
     };
 
     let {
@@ -57,8 +68,10 @@
         zoom = 12,
         tileAddress = null,
         activeMetric = null,
+        filters = EMPTY_PARCEL_FILTERS,
         oncomputedstops,
-        oncomputedvalues
+        oncomputedvalues,
+        onfilteroptions,
     }: Props = $props();
 
     let computedStops = $state<Record<string, [number, string][]>>({});
@@ -77,6 +90,47 @@
     const DEFAULT_FILL_COLOR = '#1d4ed8';
     const DEFAULT_FILL_OPACITY = 0.14;
     const METRIC_FILL_OPACITY = 0.7;
+
+    function buildAnyExpression(field: string, values: Array<string | number>): unknown[] {
+        return ['any', ...values.map((value) => ['==', ['get', field], value])];
+    }
+
+    function buildLayerFilterExpression(state: ParcelFilterState): unknown[] | null {
+        const normalized = normalizeParcelFilters(state);
+        const conditions: unknown[] = [];
+
+        if (normalized.areaPlanNames.length > 0) {
+            conditions.push(buildAnyExpression('area_plan_name', normalized.areaPlanNames));
+        }
+        if (normalized.alderDistrictNames.length > 0) {
+            conditions.push(buildAnyExpression('alder_district_name', normalized.alderDistrictNames));
+        }
+        if (normalized.wards.length > 0) {
+            conditions.push(buildAnyExpression('ward', normalized.wards));
+        }
+        if (normalized.propertyClasses.length > 0) {
+            conditions.push(buildAnyExpression('property_class', normalized.propertyClasses));
+        }
+        if (normalized.propertyUses.length > 0) {
+            conditions.push(buildAnyExpression('property_use', normalized.propertyUses));
+        }
+
+        if (conditions.length === 0) {
+            return null;
+        }
+
+        return ['all', ...conditions];
+    }
+
+    function applyLayerFilters(currentMap: Map, state: ParcelFilterState) {
+        if (!currentMap.getLayer('parcel-fill') || !currentMap.getLayer('parcel-outline')) {
+            return;
+        }
+
+        const filterExpression = buildLayerFilterExpression(state) as maplibregl.FilterSpecification | null;
+        currentMap.setFilter('parcel-fill', filterExpression);
+        currentMap.setFilter('parcel-outline', filterExpression);
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function buildFillColor(metric: MetricConfig, stops: [number, string][]): any {
@@ -130,10 +184,34 @@
         }
     });
 
+    $effect(() => {
+        if (!map) return;
+
+        applyLayerFilters(map, filters);
+        computeAllStops(map);
+    });
+
     function computeAllStops(currentMap: Map) {
-        const features = currentMap.querySourceFeatures(PARCEL_SOURCE_ID, {
+        if (!currentMap.getSource(PARCEL_SOURCE_ID)) {
+            return;
+        }
+
+        const normalizedFilters = normalizeParcelFilters(filters);
+
+        const allFeatures = currentMap.querySourceFeatures(PARCEL_SOURCE_ID, {
             sourceLayer: PARCEL_SOURCE_LAYER
         });
+
+        const allProperties = allFeatures.map((f) => f.properties as Partial<ParcelTileProperties> | undefined);
+        const features = isParcelFilterStateEmpty(normalizedFilters)
+            ? allFeatures
+            : allFeatures.filter((feature) =>
+                  matchesParcelFilters(
+                      feature.properties as Partial<ParcelTileProperties> | undefined,
+                      normalizedFilters
+                  )
+              );
+
         const nextStops: Record<string, [number, string][]> = {};
         const nextValues: Record<string, number[]> = {};
         for (const metric of metrics) {
@@ -147,6 +225,7 @@
         computedStops = nextStops;
         oncomputedstops?.(nextStops);
         oncomputedvalues?.(nextValues);
+        onfilteroptions?.(buildParcelFilterOptions(allProperties));
     }
 
     function addParcelLayers(currentMap: Map) {
@@ -188,8 +267,10 @@
         currentMap.addSource(PARCEL_SOURCE_ID, parcelSource);
         currentMap.addLayer(parcelFillLayer);
         currentMap.addLayer(parcelOutlineLayer);
+        applyLayerFilters(currentMap, filters);
 
         currentMap.once('idle', () => computeAllStops(currentMap));
+        currentMap.on('moveend', () => computeAllStops(currentMap));
 
         currentMap.on('mousemove', 'parcel-fill', (e) => {
             const features = currentMap.queryRenderedFeatures(e.point, { layers: ['parcel-fill'] });
