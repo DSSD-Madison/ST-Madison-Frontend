@@ -41,8 +41,6 @@
     import {
         buildParcelFilterOptions,
         EMPTY_PARCEL_FILTERS,
-        isParcelFilterStateEmpty,
-        matchesParcelFilters,
         normalizeParcelFilters,
         type ParcelFilterOptions,
         type ParcelFilterState
@@ -71,7 +69,7 @@
         filters = EMPTY_PARCEL_FILTERS,
         oncomputedstops,
         oncomputedvalues,
-        onfilteroptions,
+        onfilteroptions
     }: Props = $props();
 
     let computedStops = $state<Record<string, [number, string][]>>({});
@@ -188,7 +186,6 @@
         if (!map) return;
 
         applyLayerFilters(map, filters);
-        computeAllStops(map);
     });
 
     function computeAllStops(currentMap: Map) {
@@ -196,27 +193,17 @@
             return;
         }
 
-        const normalizedFilters = normalizeParcelFilters(filters);
-
         const allFeatures = currentMap.querySourceFeatures(PARCEL_SOURCE_ID, {
             sourceLayer: PARCEL_SOURCE_LAYER
         });
 
         const allProperties = allFeatures.map((f) => f.properties as Partial<ParcelTileProperties> | undefined);
-        const features = isParcelFilterStateEmpty(normalizedFilters)
-            ? allFeatures
-            : allFeatures.filter((feature) =>
-                  matchesParcelFilters(
-                      feature.properties as Partial<ParcelTileProperties> | undefined,
-                      normalizedFilters
-                  )
-              );
 
         const nextStops: Record<string, [number, string][]> = {};
         const nextValues: Record<string, number[]> = {};
         for (const metric of metrics) {
             if (metric.type !== 'numeric') continue;
-            const vals = features
+            const vals = allFeatures
                 .map((f) => f.properties?.[metric.key])
                 .filter((v): v is number => typeof v === 'number');
             nextStops[metric.key] = computeStops(vals, metric.colorScheme, metric.scaleType);
@@ -270,7 +257,6 @@
         applyLayerFilters(currentMap, filters);
 
         currentMap.once('idle', () => computeAllStops(currentMap));
-        currentMap.on('moveend', () => computeAllStops(currentMap));
 
         currentMap.on('mousemove', 'parcel-fill', (e) => {
             const features = currentMap.queryRenderedFeatures(e.point, { layers: ['parcel-fill'] });
