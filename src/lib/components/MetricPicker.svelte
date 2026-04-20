@@ -109,10 +109,9 @@
 	<details class="filters-panel">
 		<summary>
 			Filters
-			<button type="button" class="reset-btn" onclick={resetFilters}>Reset</button>
 		</summary>
 		<div class="filters">
-
+			<button type="button" class="reset-btn" onclick={resetFilters}>Reset</button>
 			<details>
 				<summary>Area Plans ({filters.areaPlanNames.length || 'All'})</summary>
 				<div class="filter-options">
@@ -299,10 +298,10 @@
 	}
 
 	.filters-panel > summary {
+		cursor: pointer;
+		font-weight: 500;
+		color: #374151;
 		font-weight: 600;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
 	}
 	.reset-btn {
 		border: 1px solid #d1d5db;
@@ -326,7 +325,7 @@
 		background: #fff;
 	}
 
-	summary {
+	.filters summary {
 		cursor: pointer;
 		font-weight: 500;
 		color: #374151;
