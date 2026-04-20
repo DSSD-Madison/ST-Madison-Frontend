@@ -86,18 +86,21 @@
                 color="#ffb549"
                 data={trends?.effectiveTaxRate ?? null}
                 years={trends?.years ?? null}
+                format={(v) => v.toFixed(4)}
             />
             <TrendChart
                 label="Net Taxes"
                 color="#A7C6ED"
                 data={trends?.netTaxes ?? null}
                 years={trends?.years ?? null}
+                format={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`}
             />
             <TrendChart
                 label="Assessed Value"
                 color="#A7C6ED"
                 data={trends?.assessedValue ?? null}
                 years={trends?.years ?? null}
+                format={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`}
             />
         </div>
     </div>

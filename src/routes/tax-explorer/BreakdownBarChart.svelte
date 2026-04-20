@@ -3,6 +3,12 @@
     import { scaleBand } from 'd3-scale';
     import Column from '$lib/components/graphs/Column.svelte';
     import AxisX from '$lib/components/graphs/AxisX.svelte';
+    import AxisY from '$lib/components/graphs/AxisY.svelte';
+
+    function compactDollar(v: number): string {
+        if (v >= 1_000) return `$${(v / 1_000).toFixed(0)}k`;
+        return `$${v.toFixed(0)}`;
+    }
 
     interface Props {
         label: string;
@@ -23,7 +29,7 @@
     <span class="chart-label">{label}</span>
     <div class="chart-container">
         <LayerCake
-            padding={{ top: 5, right: 5, bottom: 20, left: 5 }}
+            padding={{ top: 5, right: 5, bottom: 20, left: 40 }}
             x="x"
             y="y"
             xScale={scaleBand().padding(0.2)}
@@ -31,6 +37,7 @@
             data={chartData}
         >
             <Svg>
+                <AxisY ticks={3} gridlines={true} format={compactDollar} />
                 <AxisX gridlines={false} tickMarks={true} />
                 <Column {fill} />
             </Svg>
@@ -59,11 +66,12 @@
     }
 
     .chart-container :global(.tick text) {
-        fill: rgba(249, 249, 249, 0.45);
+        fill: var(--color-link);
         font-size: 10px;
     }
 
-    .chart-container :global(.tick line) {
-        stroke: rgba(255, 255, 255, 0.1);
+    .chart-container :global(.tick line),
+    .chart-container :global(.gridline) {
+        stroke: rgba(255, 255, 255, 0.2);
     }
 </style>
