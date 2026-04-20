@@ -8,11 +8,8 @@
     import PropertyDetailsDropdown from './PropertyDetailsDropdown.svelte';
     import TrendChart from './TrendChart.svelte';
 
-    import assessmentsMock from '$lib/mock/parcel-assessments.json';
-    import landEfficiencyMock from '$lib/mock/parcel-land-efficiency.json';
-    import trendsMock from '$lib/mock/parcel-trends.json';
-    import taxBreakdownMock from '$lib/mock/parcel-tax-breakdown.json';
-    import propertyDetailsMock from '$lib/mock/parcel-property-details.json';
+    import { fetchParcel } from '$lib/api';
+    import type { AssessmentsData, LandEfficiencyData, TrendsData, PropertyDetailsData } from '$lib/api';
 
     const barColors: Record<string, string> = {
         City: '#ffb549',
@@ -23,21 +20,32 @@
 
     let groupMode = $state<'group' | 'year'>('group');
     let dropdownOpen = $state(false);
+    let loading = $state(false);
+    let error = $state<string | null>(null);
 
-    let assessments = $state(assessmentsMock);
-    let propertyDetails = $state(propertyDetailsMock);
-    let landEfficiency = $state(landEfficiencyMock);
-    let trends = $state(trendsMock);
-    let taxBreakdown = $state(taxBreakdownMock.sources);
-    let taxBreakdownYears = $state(taxBreakdownMock.years);
+    let assessments = $state<AssessmentsData | null>(null);
+    let propertyDetails = $state<PropertyDetailsData | null>(null);
+    let landEfficiency = $state<LandEfficiencyData | null>(null);
+    let trends = $state<TrendsData | null>(null);
+    let taxBreakdown = $state<{ label: string; values: number[] }[]>([]);
+    let taxBreakdownYears = $state<number[]>([]);
 
     async function handleSearch(address: string) {
-        // TODO: fetch parcel data from backend API using address
-        // assessments = await fetchAssessments(address);
-        // landEfficiency = await fetchLandEfficiency(address);
-        // trends = await fetchTrends(address);
-        // taxBreakdown = await fetchTaxBreakdown(address);
-        console.log('searching for:', address);
+        loading = true;
+        error = null;
+        try {
+            const data = await fetchParcel(address);
+            assessments = data.assessments;
+            landEfficiency = data.landEfficiency;
+            trends = data.trends;
+            taxBreakdown = data.taxBreakdown.sources;
+            taxBreakdownYears = data.taxBreakdown.years;
+            propertyDetails = data.propertyDetails;
+        } catch (e) {
+            error = e instanceof Error ? e.message : 'An unexpected error occurred.';
+        } finally {
+            loading = false;
+        }
     }
 </script>
 
@@ -59,6 +67,11 @@
         </div>
     </div>
 
+    {#if error}
+        <div class="error-banner">{error}</div>
+    {/if}
+
+    <div class="content" class:loading>
     <div class="tables-row">
         <AssessmentsTable data={assessments} />
         <LandEfficiencyTable data={landEfficiency} />
@@ -133,6 +146,7 @@
                 {/each}
             </div>
         {/if}
+    </div>
     </div>
 </div>
 
@@ -228,6 +242,25 @@
 
     .dropdown-btn :global(.rotated) {
         transform: rotate(180deg);
+    }
+
+    .error-banner {
+        background: rgba(255, 100, 80, 0.15);
+        border: 1px solid rgba(255, 100, 80, 0.4);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        color: #ffb4ab;
+        margin-bottom: 1.5rem;
+    }
+
+    .content {
+        transition: opacity 0.15s;
+    }
+
+    .content.loading {
+        opacity: 0.4;
+        pointer-events: none;
     }
 
     /* Data cards row */
