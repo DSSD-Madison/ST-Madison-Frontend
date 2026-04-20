@@ -298,4 +298,18 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
     }
+
+    @media (max-width: 1024px) {
+        .trends-row,
+        .bar-charts-row {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .trends-row,
+        .bar-charts-row {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
