@@ -72,79 +72,85 @@
             <LandEfficiencyTable data={landEfficiency} />
         </div>
 
-        <!-- Trends -->
-        <div class="section">
-            <h2>Trends</h2>
-            <div class="trends-row">
-                <TrendChart
-                    label="Effective Tax Rate"
-                    color="#ffb549"
-                    data={trends?.effectiveTaxRate ?? null}
-                    years={trends?.years ?? null}
-                    format={(v) => v.toFixed(4)}
-                />
-                <TrendChart
-                    label="Net Taxes"
-                    color="#A7C6ED"
-                    data={trends?.netTaxes ?? null}
-                    years={trends?.years ?? null}
-                    format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
-                />
-                <TrendChart
-                    label="Assessed Value"
-                    color="#A7C6ED"
-                    data={trends?.assessedValue ?? null}
-                    years={trends?.years ?? null}
-                    format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
-                />
+        {#if trends === null && taxBreakdown.length === 0}
+            <div class="charts-placeholder">
+                <p>Search for a property to see a graphical breakdown of trends and tax distribution.</p>
             </div>
-        </div>
+        {:else}
+            <!-- Trends -->
+            <div class="section">
+                <h2>Trends</h2>
+                <div class="trends-row">
+                    <TrendChart
+                        label="Effective Tax Rate"
+                        color="#ffb549"
+                        data={trends?.effectiveTaxRate ?? null}
+                        years={trends?.years ?? null}
+                        format={(v) => v.toFixed(4)}
+                    />
+                    <TrendChart
+                        label="Net Taxes"
+                        color="#A7C6ED"
+                        data={trends?.netTaxes ?? null}
+                        years={trends?.years ?? null}
+                        format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
+                    />
+                    <TrendChart
+                        label="Assessed Value"
+                        color="#A7C6ED"
+                        data={trends?.assessedValue ?? null}
+                        years={trends?.years ?? null}
+                        format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
+                    />
+                </div>
+            </div>
 
-        <!-- Breakdown by Group -->
-        <div class="section">
-            <div class="breakdown-header">
-                <h2>Breakdown by Group</h2>
-                <div class="toggle-group">
-                    <button
-                        class="toggle-btn"
-                        class:active={groupMode === 'group'}
-                        onclick={() => (groupMode = 'group')}
-                    >
-                        <span class="dot blue"></span> By Group
-                    </button>
-                    <button
-                        class="toggle-btn"
-                        class:active={groupMode === 'year'}
-                        onclick={() => (groupMode = 'year')}
-                    >
-                        <span class="dot gray"></span> By Year
-                    </button>
+            <!-- Breakdown by Group -->
+            <div class="section">
+                <div class="breakdown-header">
+                    <h2>Breakdown by Group</h2>
+                    <div class="toggle-group">
+                        <button
+                            class="toggle-btn"
+                            class:active={groupMode === 'group'}
+                            onclick={() => (groupMode = 'group')}
+                        >
+                            <span class="dot blue"></span> By Group
+                        </button>
+                        <button
+                            class="toggle-btn"
+                            class:active={groupMode === 'year'}
+                            onclick={() => (groupMode = 'year')}
+                        >
+                            <span class="dot gray"></span> By Year
+                        </button>
+                    </div>
                 </div>
+                {#if groupMode === 'group'}
+                    <div class="bar-charts-row">
+                        {#each taxBreakdown as group (group.label)}
+                            <BreakdownBarChart
+                                label={group.label}
+                                bars={group.values}
+                                color={barColors[group.label]}
+                                xLabels={taxBreakdownYears}
+                            />
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="bar-charts-row">
+                        {#each taxBreakdownYears as year, i (year)}
+                            <BreakdownBarChart
+                                label={String(year)}
+                                bars={taxBreakdown.map((s) => s.values[i])}
+                                colors={taxBreakdown.map((s) => barColors[s.label])}
+                                xLabels={taxBreakdown.map((s) => s.label)}
+                            />
+                        {/each}
+                    </div>
+                {/if}
             </div>
-            {#if groupMode === 'group'}
-                <div class="bar-charts-row">
-                    {#each taxBreakdown as group (group.label)}
-                        <BreakdownBarChart
-                            label={group.label}
-                            bars={group.values}
-                            color={barColors[group.label]}
-                            xLabels={taxBreakdownYears}
-                        />
-                    {/each}
-                </div>
-            {:else}
-                <div class="bar-charts-row">
-                    {#each taxBreakdownYears as year, i (year)}
-                        <BreakdownBarChart
-                            label={String(year)}
-                            bars={taxBreakdown.map((s) => s.values[i])}
-                            colors={taxBreakdown.map((s) => barColors[s.label])}
-                            xLabels={taxBreakdown.map((s) => s.label)}
-                        />
-                    {/each}
-                </div>
-            {/if}
-        </div>
+        {/if}
     </div>
 </div>
 
@@ -236,6 +242,21 @@
 
     .section {
         margin-bottom: 2rem;
+    }
+
+    .charts-placeholder {
+        background-color: var(--color-lower-nav);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        color: var(--color-link);
+        font-size: 0.875rem;
+        font-style: italic;
+        margin-bottom: 2rem;
+    }
+
+    .charts-placeholder p {
+        margin: 0;
     }
 
     /* Breakdown */
