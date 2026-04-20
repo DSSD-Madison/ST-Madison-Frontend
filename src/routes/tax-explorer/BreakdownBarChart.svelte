@@ -68,6 +68,7 @@
     .chart-container :global(.tick text) {
         fill: var(--color-link);
         font-size: 10px;
+        font-family: sans-serif;
     }
 
     .chart-container :global(.tick line),

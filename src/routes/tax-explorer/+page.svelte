@@ -338,9 +338,14 @@
         gap: 1rem;
     }
 
-    @media (max-width: 1024px) {
-        .trends-row,
+    @media (max-width: 1280px) {
         .bar-charts-row {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .trends-row {
             grid-template-columns: 1fr 1fr;
         }
     }
