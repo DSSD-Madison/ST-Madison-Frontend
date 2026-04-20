@@ -163,6 +163,7 @@
         border-radius: 12px;
         padding: 1.5rem 2rem;
         display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
         align-items: flex-end;
         margin-bottom: 2rem;
@@ -170,6 +171,23 @@
 
     .search-field {
         flex: 1;
+        min-width: 0;
+    }
+
+    @media (max-width: 768px) {
+        .search-card {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .dropdown-anchor {
+            width: 100%;
+        }
+
+        .dropdown-btn {
+            width: 100%;
+            justify-content: space-between;
+        }
     }
 
     .search-field label {
