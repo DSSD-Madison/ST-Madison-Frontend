@@ -15,10 +15,10 @@
     import propertyDetailsMock from '$lib/mock/parcel-property-details.json';
 
     const barColors: Record<string, string> = {
-        City: '#5b9bd5',
-        School: '#e07070',
-        County: '#5bad5b',
-        MATC: '#9b7dd4'
+        City: '#ffb549',
+        School: '#f9f9f9',
+        County: '#A7C6ED',
+        MATC: '#6A89B0'
     };
 
     let groupMode = $state<'group' | 'year'>('group');
@@ -82,7 +82,7 @@
             />
             <TrendChart
                 label="Assessed Value"
-                color="#ffb549"
+                color="#A7C6ED"
                 data={trends?.assessedValue ?? null}
                 years={trends?.years ?? null}
             />
