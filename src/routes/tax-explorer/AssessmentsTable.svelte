@@ -12,63 +12,65 @@
     }
 
     let { data }: Props = $props();
+
+    const rows = $derived([
+        { label: 'Land Value', value: data?.landValue },
+        { label: 'Improvement Value', value: data?.improvementValue },
+        { label: 'Total Assessed Value', value: data?.totalAssessedValue },
+        { label: 'Net Taxes', value: data?.netTaxes },
+        { label: 'Lot Size', value: data?.lotSize },
+    ]);
 </script>
 
-<div class="table-card">
-    <h3>Assessments Table</h3>
-    <table>
-        <thead>
-            <tr><th>Metric</th><th>Value</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>Land Value</td><td>{data?.landValue ?? '-'}</td></tr>
-            <tr><td>Improvement Value</td><td>{data?.improvementValue ?? '-'}</td></tr>
-            <tr><td>Total Assessed Value</td><td>{data?.totalAssessedValue ?? '-'}</td></tr>
-            <tr><td>Net Taxes</td><td>{data?.netTaxes ?? '-'}</td></tr>
-            <tr><td>Lot Size</td><td>{data?.lotSize ?? '-'}</td></tr>
-        </tbody>
-    </table>
+<div class="card">
+    <h2>Assessments</h2>
+    <div class="rows">
+        {#each rows as row}
+            <div class="row">
+                <span class="row-label">{row.label}</span>
+                <span class="row-value">{row.value ?? '-'}</span>
+            </div>
+        {/each}
+    </div>
 </div>
 
 <style>
-    .table-card {
-        border: 1.5px solid rgba(255, 255, 255, 0.12);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
+    .card {
+        background-color: var(--color-lower-nav);
+        border-radius: 12px;
+        padding: 1.75rem 2rem;
     }
 
-    h3 {
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin: 0 0 0.5rem;
+    h2 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0 0 1.25rem;
+    }
+
+    .rows {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .row:last-child {
+        border-bottom: none;
+    }
+
+    .row-label {
+        font-size: 0.875rem;
         color: rgba(249, 249, 249, 0.55);
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-    }
-
-    th {
-        text-align: left;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem 0.4rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        color: rgba(249, 249, 249, 0.7);
-    }
-
-    td {
-        padding: 0.3rem 0.5rem;
-        color: var(--color-text);
-    }
-
-    td:last-child {
-        text-align: right;
-        color: rgba(249, 249, 249, 0.65);
-    }
-
-    tr:not(:last-child) td {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    .row-value {
+        font-size: 0.875rem;
+        font-weight: 500;
     }
 </style>

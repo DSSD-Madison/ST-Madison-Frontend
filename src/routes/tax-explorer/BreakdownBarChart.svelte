@@ -19,7 +19,7 @@
     const fill = $derived(colors ?? color);
 </script>
 
-<div class="bar-chart-box">
+<div class="card">
     <span class="chart-label">{label}</span>
     <div class="chart-container">
         <LayerCake
@@ -39,27 +39,31 @@
 </div>
 
 <style>
-    .bar-chart-box {
+    .card {
+        background-color: var(--color-lower-nav);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
         display: flex;
         flex-direction: column;
-        gap: 0.3rem;
+        gap: 0.75rem;
     }
 
     .chart-label {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         color: rgba(249, 249, 249, 0.55);
     }
 
     .chart-container {
         width: 100%;
-        height: 100px;
+        height: 120px;
     }
 
     .chart-container :global(.tick text) {
-        fill: rgba(249, 249, 249, 0.55);
+        fill: rgba(249, 249, 249, 0.45);
+        font-size: 10px;
     }
 
     .chart-container :global(.tick line) {
-        stroke: rgba(255, 255, 255, 0.15);
+        stroke: rgba(255, 255, 255, 0.1);
     }
 </style>

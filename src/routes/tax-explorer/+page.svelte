@@ -44,18 +44,18 @@
 <div class="page">
     <h1>Tax Explorer</h1>
 
-    <div class="search-section">
-        <label for="address">Find a Property</label>
-        <div class="search-row">
+    <div class="search-card">
+        <div class="search-field">
+            <label for="address">Find a Property</label>
             <PropertySearch onsearch={handleSearch} />
-            <div class="dropdown-anchor">
-                <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
-                    Property Details <ExpandDown
-                        class="property-details-icon {dropdownOpen ? 'rotated' : ''}"
-                    />
-                </button>
-                <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
-            </div>
+        </div>
+        <div class="dropdown-anchor">
+            <button class="dropdown-btn" onclick={() => (dropdownOpen = !dropdownOpen)}>
+                Property Details <ExpandDown
+                    class="property-details-icon {dropdownOpen ? 'rotated' : ''}"
+                />
+            </button>
+            <PropertyDetailsDropdown open={dropdownOpen} data={propertyDetails} />
         </div>
     </div>
 
@@ -70,14 +70,21 @@
         <div class="trends-row">
             <TrendChart
                 label="Effective Tax Rate"
-                color="#4a9e4a"
+                color="#ffb549"
                 data={trends?.effectiveTaxRate ?? null}
+                years={trends?.years ?? null}
             />
-            <TrendChart label="Net Taxes" color="#c84b4b" data={trends?.netTaxes ?? null} />
+            <TrendChart
+                label="Net Taxes"
+                color="#A7C6ED"
+                data={trends?.netTaxes ?? null}
+                years={trends?.years ?? null}
+            />
             <TrendChart
                 label="Assessed Value"
-                color="#4a72c8"
+                color="#ffb549"
                 data={trends?.assessedValue ?? null}
+                years={trends?.years ?? null}
             />
         </div>
     </div>
@@ -131,54 +138,70 @@
 
 <style>
     .page {
-        padding: 2rem;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem 2.5rem;
     }
 
     h1 {
         font-size: 1.75rem;
         font-weight: 700;
-        margin: 0 0 1.25rem;
+        margin: 0 0 1.5rem;
+        letter-spacing: -0.01em;
     }
 
     h2 {
-        font-size: 1.25rem;
+        font-size: 1.35rem;
         font-weight: 700;
-        margin: 0 0 0.75rem;
+        margin: 0 0 1rem;
+        letter-spacing: -0.01em;
     }
 
-    .search-section {
-        margin-bottom: 1.75rem;
+    /* Search card */
+    .search-card {
+        background-color: var(--color-lower-nav);
+        border-radius: 12px;
+        padding: 1.5rem 2rem;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        margin-bottom: 2rem;
     }
 
-    .search-section label {
+    .search-field {
+        flex: 1;
+    }
+
+    .search-field label {
         display: block;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: rgba(249, 249, 249, 0.55);
         margin-bottom: 0.4rem;
     }
 
-    .search-row {
-        display: flex;
-        gap: 0.75rem;
-        align-items: flex-start;
-    }
-
     .dropdown-anchor {
         position: relative;
+        flex-shrink: 0;
     }
 
     .dropdown-btn {
-        padding: 0.45rem 0.75rem;
-        border: 1.5px solid rgba(255, 255, 255, 0.2);
-        border-radius: 6px;
-        background: transparent;
+        padding: 0.6rem 1rem;
+        border: none;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
         color: var(--color-text);
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         cursor: pointer;
         display: flex;
         align-items: center;
         gap: 0.4rem;
+        white-space: nowrap;
+        transition: background 0.15s;
+    }
+
+    .dropdown-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
     }
 
     .dropdown-btn :global(svg) {
@@ -189,23 +212,24 @@
         transform: rotate(180deg);
     }
 
+    /* Data cards row */
     .tables-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.25rem;
-        margin-bottom: 1.75rem;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     .section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     /* Breakdown */
     .breakdown-header {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
-        margin-bottom: 0.75rem;
+        justify-content: space-between;
+        margin-bottom: 1rem;
     }
 
     .breakdown-header h2 {
@@ -214,38 +238,35 @@
 
     .toggle-group {
         display: flex;
-        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        padding: 3px;
+        gap: 2px;
     }
 
     .toggle-btn {
         display: flex;
         align-items: center;
         gap: 0.3rem;
-        padding: 0.25rem 0.6rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
+        padding: 0.3rem 0.9rem;
+        border: none;
+        border-radius: 999px;
         background: transparent;
         font-family: inherit;
         font-size: 0.8rem;
         cursor: pointer;
         color: rgba(249, 249, 249, 0.55);
+        transition: background 0.15s, color 0.15s;
     }
 
     .toggle-btn.active {
-        border-color: rgba(255, 255, 255, 0.45);
-        color: var(--color-text);
+        background: var(--color-yellow);
+        color: var(--color-main-nav);
+        font-weight: 600;
     }
 
     .dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: rgba(249, 249, 249, 0.3);
-    }
-
-    .toggle-btn.active .dot {
-        background: #5b9bd5;
+        display: none;
     }
 
     .trends-row {
