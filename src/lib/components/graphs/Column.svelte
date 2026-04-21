@@ -47,6 +47,7 @@
             fill={Array.isArray(fill) ? fill[i] : fill}
             {stroke}
             stroke-width={strokeWidth}
+            title={`${$x(d)}: ${yValue}`}
         />
         {#if showLabels && yValue}
             <text x={xPos + colWidth / 2} y={$height - colHeight - 5} text-anchor="middle"

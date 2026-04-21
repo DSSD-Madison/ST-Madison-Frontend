@@ -9,6 +9,7 @@
     { href: '/', label: 'Home', icon: IconHome },
     { href: '/tax-explorer', label: 'Tax Explorer' },
     { href: '/map', label: 'Map', icon: IconMap },
+    { href: '/statistics', label: 'Statistics' },
   ];
 </script>
 
@@ -21,7 +22,7 @@
     <div class="links">
       {#each links as link}
         <a
-          href={resolve(link.href)}
+          href={resolve(link.href as Parameters<typeof resolve>[0])}
           class="nav-link"
           class:active={page.url.pathname === link.href}
         >
