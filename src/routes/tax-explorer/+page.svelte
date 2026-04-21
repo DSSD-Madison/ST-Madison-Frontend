@@ -74,7 +74,10 @@
 
         {#if trends === null && taxBreakdown.length === 0}
             <div class="charts-placeholder">
-                <p>Search for a property to see a graphical breakdown of trends and tax distribution.</p>
+                <p>
+                    Search for a property to see a graphical breakdown of trends and tax
+                    distribution.
+                </p>
             </div>
         {:else}
             <!-- Trends -->
@@ -93,14 +96,16 @@
                         color="#A7C6ED"
                         data={trends?.netTaxes ?? null}
                         years={trends?.years ?? null}
-                        format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
+                        format={(v) =>
+                            v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`}
                     />
                     <TrendChart
                         label="Assessed Value"
                         color="#A7C6ED"
                         data={trends?.assessedValue ?? null}
                         years={trends?.years ?? null}
-                        format={(v) => (v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`)}
+                        format={(v) =>
+                            v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v.toFixed(0)}`}
                     />
                 </div>
             </div>
@@ -157,7 +162,7 @@
 <style>
     .page {
         max-width: 1280px;
-        margin: 0 auto;
+        width: 80%;
         padding: 2rem 2.5rem;
     }
 
@@ -235,9 +240,6 @@
     }
 
     @media (max-width: 768px) {
-        .tables-row {
-            grid-template-columns: 1fr;
-        }
     }
 
     .section {
@@ -329,7 +331,8 @@
 
     @media (max-width: 768px) {
         .trends-row,
-        .bar-charts-row {
+        .bar-charts-row,
+        .tables-row {
             grid-template-columns: 1fr;
         }
     }
