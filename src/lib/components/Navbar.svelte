@@ -1,13 +1,11 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import IconHome from '~icons/lets-icons/home-duotone';
   import IconMap from '~icons/lets-icons/map-duotone';
   import Logo from './Logo.svelte';
 
   const links = [
-    { href: '/', label: 'Home', icon: IconHome },
-    { href: '/tax-explorer', label: 'Tax Explorer' },
+    { href: '/', label: 'Tax Explorer' },
     { href: '/map', label: 'Map', icon: IconMap },
     { href: '/statistics', label: 'Statistics' },
   ];

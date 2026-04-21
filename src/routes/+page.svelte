@@ -1,10 +1,10 @@
 <script lang="ts">
-    import AssessmentsTable from './AssessmentsTable.svelte';
-    import LandEfficiencyTable from './LandEfficiencyTable.svelte';
-    import BreakdownBarChart from './BreakdownBarChart.svelte';
-    import PropertySearch from './PropertySearch.svelte';
-    import PropertyDetailsDropdown from './PropertyDetailsDropdown.svelte';
-    import TrendChart from './TrendChart.svelte';
+    import AssessmentsTable from '$lib/components/tax-explorer/AssessmentsTable.svelte';
+    import LandEfficiencyTable from '$lib/components/tax-explorer/LandEfficiencyTable.svelte';
+    import BreakdownBarChart from '$lib/components/tax-explorer/BreakdownBarChart.svelte';
+    import PropertySearch from '$lib/components/tax-explorer/PropertySearch.svelte';
+    import PropertyDetailsDropdown from '$lib/components/tax-explorer/PropertyDetailsDropdown.svelte';
+    import TrendChart from '$lib/components/tax-explorer/TrendChart.svelte';
 
     import { fetchParcel } from '$lib/api';
     import type {
