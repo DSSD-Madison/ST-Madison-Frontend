@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { PUBLIC_STATS_ADDRESS } from '$env/static/public';
+    import type { ParcelTileProperties } from '$lib/api';
+    import { onMount } from 'svelte';
     import { NUMERIC_METRICS } from '$lib/config/metrics';
     import type { NumericMetric } from '$lib/config/metrics';
     import {
@@ -15,7 +18,7 @@
     import GroupedBoxPlot from '$lib/components/statistics/GroupedBoxPlot.svelte';
     import ScatterChart from '$lib/components/statistics/ScatterChart.svelte';
 
-    let { data } = $props();
+    let parcels: Partial<ParcelTileProperties>[] = $state([]);
 
     let filters: ParcelFilterState = $state(EMPTY_PARCEL_FILTERS);
     let activeMetric: NumericMetric = $state(
@@ -26,10 +29,17 @@
         NUMERIC_METRICS.find((m) => m.key === 'tax_rate') ?? NUMERIC_METRICS[1]
     );
 
-    let filtered = $derived(
-        data.parcels.filter((p) => matchesParcelFilters(p, filters))
-    );
-    let filterOptions = $derived(buildParcelFilterOptions(data.parcels));
+    let filtered = $derived(parcels.filter((p) => matchesParcelFilters(p, filters)));
+    let filterOptions = $derived(buildParcelFilterOptions(parcels));
+
+    onMount(async () => {
+        const response = await fetch(PUBLIC_STATS_ADDRESS);
+        if (!response.ok) {
+            return;
+        }
+
+        parcels = (await response.json()) as Partial<ParcelTileProperties>[];
+    });
 
     function handleCorrelateChange(m: NumericMetric) {
         correlateWith = m;
@@ -46,7 +56,7 @@
             {filters}
             filterOptions={filterOptions}
             matched={filtered.length}
-            total={data.parcels.length}
+            total={parcels.length}
             onfilterchange={(f) => (filters = f)}
         />
     </aside>
