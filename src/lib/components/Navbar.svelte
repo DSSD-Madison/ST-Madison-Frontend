@@ -1,66 +1,89 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import IconHome from '~icons/lets-icons/home-duotone';
-  import IconChart from '~icons/lets-icons/chart-duotone';
+  import { page } from "$app/state";
   import IconMap from '~icons/lets-icons/map-duotone';
   import Logo from './Logo.svelte';
+
+  const links = [
+    { href: '/', label: 'Tax Explorer' },
+    { href: '/map', label: 'Map', icon: IconMap },
+    { href: '/statistics', label: 'Statistics' },
+  ];
 </script>
 
 <nav class="navbar">
-  <a href={resolve("/")}>
-    <h1>
+  <div class="navbar-left">
+    <a href={resolve("/")} class="brand">
       <Logo />
-      Madison Tax Explorer
-    </h1>
-  </a>
-  <div class="spacer"></div>
-  <a href={resolve("/")} class="nav-link"><IconHome />Home</a>
-  <a href={resolve("/charts")} class="nav-link"><IconChart />Charts</a>
-  <a href={resolve("/map")} class="nav-link"><IconMap />Map</a>
+      <span>Madison Tax Explorer</span>
+    </a>
+    <div class="links">
+      {#each links as link}
+        <a
+          href={resolve(link.href as Parameters<typeof resolve>[0])}
+          class="nav-link"
+          class:active={page.url.pathname === link.href}
+        >
+          {link.label}
+        </a>
+      {/each}
+    </div>
+  </div>
 </nav>
 
 <style>
   .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
     background-color: var(--color-lower-nav);
-    font-family: var(--font-main), "serif";
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
   }
 
-  h1 {
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .brand {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-
-  .spacer {
-    flex-grow: 1;
-  }
-
-  .navbar h1 {
-    margin: 0;
-    color: var(--color-text);
-    font-size: 1.25rem;
-  }
-
-  .navbar a {
     text-decoration: none;
+    color: var(--color-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .links {
+    display: flex;
+    gap: 1.5rem;
   }
 
   .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    color: var(--color-main-nav);
-    background-color: var(--color-link);
-    transition: background-color 0.2s ease;
-    &:hover {
-      background-color: #dcdcdc;
-    }
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-link);
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .nav-link:hover {
+    color: var(--color-yellow);
+  }
+
+  .nav-link.active {
+    color: var(--color-yellow);
+    border-bottom-color: var(--color-yellow);
   }
 </style>
-

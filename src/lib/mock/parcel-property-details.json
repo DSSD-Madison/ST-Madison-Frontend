@@ -1,0 +1,11 @@
+{
+    "propertyClass": "Residential",
+    "propertyUse": "Single Family",
+    "yearBuilt": 1962,
+    "bedrooms": 3,
+    "fullBaths": 2,
+    "halfBaths": 1,
+    "totalLivingArea": "1,840 sqft",
+    "homeStyle": "Ranch",
+    "multiStory": false
+}
