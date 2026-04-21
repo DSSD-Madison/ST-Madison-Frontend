@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { metrics, type MetricConfig } from '$lib/config/metrics';
     import {
-        EMPTY_PARCEL_FILTERS,
         type ParcelFilterOptions,
         type ParcelFilterState
     } from '$lib/config/parcelFilters';
     import { formatStop } from '$lib/utils/formatting';
     import HistogramLegend from '$lib/components/HistogramLegend.svelte';
+    import FilterPanel from '$lib/components/FilterPanel.svelte';
 
 	type Props = {
 		activeMetric: MetricConfig | null;
@@ -58,37 +58,6 @@
 		onchange(found);
 	}
 
-	function toggleStringFilter(
-		key: 'areaPlanNames' | 'alderDistrictNames' | 'propertyClasses' | 'propertyUses',
-		value: string,
-		checked: boolean
-	) {
-		const current = filters[key];
-		const nextValues = checked
-			? [...current, value]
-			: current.filter((candidate) => candidate !== value);
-		onfilterchange({
-			...filters,
-			[key]: nextValues
-		});
-	}
-
-	function toggleWard(value: number, checked: boolean) {
-		const current = filters.wards;
-		const nextValues = checked ? [...current, value] : current.filter((candidate) => candidate !== value);
-		onfilterchange({
-			...filters,
-			wards: nextValues
-		});
-	}
-
-	function resetFilters() {
-		onfilterchange(EMPTY_PARCEL_FILTERS);
-	}
-
-	function selectedLabel(selected: number | string): string {
-		return typeof selected === 'number' ? `Ward ${selected}` : selected;
-	}
 </script>
 
 <div class="metric-picker">
@@ -106,113 +75,7 @@
 		</optgroup>
 	</select>
 
-	<details class="filters-panel">
-		<summary>
-			Filters
-		</summary>
-		<div class="filters">
-			<button type="button" class="reset-btn" onclick={resetFilters}>Reset</button>
-			<details>
-				<summary>Area Plans ({filters.areaPlanNames.length || 'All'})</summary>
-				<div class="filter-options">
-					{#each filterOptions.areaPlanNames as value (value)}
-						<label>
-							<input
-								type="checkbox"
-								checked={filters.areaPlanNames.includes(value)}
-								onchange={(event) =>
-									toggleStringFilter(
-										'areaPlanNames',
-										value,
-										(event.target as HTMLInputElement).checked
-									)}
-							/>
-							<span>{value}</span>
-						</label>
-					{/each}
-				</div>
-			</details>
-
-			<details>
-				<summary>Alder Districts ({filters.alderDistrictNames.length || 'All'})</summary>
-				<div class="filter-options">
-					{#each filterOptions.alderDistrictNames as value (value)}
-						<label>
-							<input
-								type="checkbox"
-								checked={filters.alderDistrictNames.includes(value)}
-								onchange={(event) =>
-									toggleStringFilter(
-										'alderDistrictNames',
-										value,
-										(event.target as HTMLInputElement).checked
-									)}
-							/>
-							<span>{value}</span>
-						</label>
-					{/each}
-				</div>
-			</details>
-
-			<details>
-				<summary>Wards ({filters.wards.length || 'All'})</summary>
-				<div class="filter-options">
-					{#each filterOptions.wards as value (value)}
-						<label>
-							<input
-								type="checkbox"
-								checked={filters.wards.includes(value)}
-								onchange={(event) => toggleWard(value, (event.target as HTMLInputElement).checked)}
-							/>
-							<span>{selectedLabel(value)}</span>
-						</label>
-					{/each}
-				</div>
-			</details>
-
-			<details>
-				<summary>Property Class ({filters.propertyClasses.length || 'All'})</summary>
-				<div class="filter-options">
-					{#each filterOptions.propertyClasses as value (value)}
-						<label>
-							<input
-								type="checkbox"
-								checked={filters.propertyClasses.includes(value)}
-								onchange={(event) =>
-									toggleStringFilter(
-										'propertyClasses',
-										value,
-										(event.target as HTMLInputElement).checked
-									)}
-							/>
-							<span>{value}</span>
-						</label>
-					{/each}
-				</div>
-			</details>
-
-			<details>
-				<summary>Property Use ({filters.propertyUses.length || 'All'})</summary>
-				<div class="filter-options">
-					{#each filterOptions.propertyUses as value (value)}
-						<label>
-							<input
-								type="checkbox"
-								checked={filters.propertyUses.includes(value)}
-								onchange={(event) =>
-									toggleStringFilter(
-										'propertyUses',
-										value,
-										(event.target as HTMLInputElement).checked
-									)}
-							/>
-							<span>{value}</span>
-						</label>
-					{/each}
-				</div>
-			</details>
-		</div>
-	</details>
+	<FilterPanel variant="inline" {filters} {filterOptions} {onfilterchange} />
 
 	{#if activeMetric}
 		<div class="legend">
@@ -285,78 +148,6 @@
 		margin-top: 8px;
 	}
 
-	.filters {
-		margin-top: 8px;
-	}
-
-	.filters-panel {
-		margin-top: 10px;
-		border: 1px solid #e5e7eb;
-		border-radius: 6px;
-		padding: 6px;
-		background: rgba(255, 255, 255, 0.7);
-	}
-
-	.filters-panel > summary {
-		cursor: pointer;
-		font-weight: 500;
-		color: #374151;
-		font-weight: 600;
-	}
-	.reset-btn {
-		border: 1px solid #d1d5db;
-		background: #fff;
-		color: #1f2937;
-		border-radius: 6px;
-		padding: 2px 8px;
-		font-size: 12px;
-		cursor: pointer;
-	}
-
-	.reset-btn:hover {
-		background: #f9fafb;
-	}
-
-	details {
-		border: 1px solid #e5e7eb;
-		border-radius: 6px;
-		padding: 4px 6px;
-		margin-top: 6px;
-		background: #fff;
-	}
-
-	.filters summary {
-		cursor: pointer;
-		font-weight: 500;
-		color: #374151;
-		list-style: none;
-	}
-
-	summary::-webkit-details-marker {
-		display: none;
-	}
-
-	.filter-options {
-		margin-top: 6px;
-		max-height: 132px;
-		overflow: auto;
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		padding-bottom: 2px;
-	}
-
-	.filter-options label {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		color: #1f2937;
-	}
-
-	.filter-options input {
-		margin: 0;
-	}
-
 	.gradient-bar {
 		display: flex;
 		flex-direction: column;
@@ -400,9 +191,4 @@
 		font-size: 12px;
 	}
 
-	.parcel-count {
-		margin-top: 10px;
-		color: #4b5563;
-		font-weight: 500;
-	}
 </style>

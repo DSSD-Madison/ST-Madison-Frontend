@@ -31,7 +31,6 @@
 
     .content {
         flex: 1;
-        overflow: auto;
         display: flex;
         flex-direction: column;
         position: relative;

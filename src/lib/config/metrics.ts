@@ -77,6 +77,22 @@ export const metrics: MetricConfig[] = [
         scaleType: 'quantile'
     },
     {
+        key: 'net_taxes_per_sqft_lot',
+        label: 'Net Taxes /sqft',
+        type: 'numeric',
+        format: 'currency',
+        colorScheme: 'YlOrRd',
+        scaleType: 'log'
+    },
+    {
+        key: 'land_share_property',
+        label: 'Land Share',
+        type: 'numeric',
+        format: 'percent',
+        colorScheme: 'YlOrRd',
+        scaleType: 'quantile'
+    },
+    {
         key: 'property_class',
         label: 'Property Class',
         type: 'categorical',
@@ -117,3 +133,5 @@ export const metrics: MetricConfig[] = [
         fallbackColor: '#9ca3af'
     }
 ];
+
+export const NUMERIC_METRICS = metrics.filter((m): m is NumericMetric => m.type === 'numeric');
